@@ -4,6 +4,7 @@ import com.epam.billing.entity.User;
 import com.epam.billing.exeption.DBException;
 import com.epam.billing.repository.UserRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +36,7 @@ public class UserService {
         return userRepository.getById(id);
     }
 
-    public Optional<User> getByEmail(String email) throws DBException {
-        return userRepository.getByEmail(email);
-    }
+    public Optional<User> getByEmail(String email) { return userRepository.getByEmail(email); }
 
     public User update(User user) {
         return userRepository.update(user);

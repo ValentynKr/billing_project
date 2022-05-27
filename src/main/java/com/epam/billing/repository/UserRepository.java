@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserRepository extends AbstractRepository<User>{
+public class UserRepository extends AbstractRepository<User> {
 
     private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM users WHERE id = ?";
@@ -18,7 +18,6 @@ public class UserRepository extends AbstractRepository<User>{
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE = "UPDATE users SET name=?, admin=?, email=?, pass=? " +
             "WHERE id=?";
-
 
 
     @Override
@@ -33,16 +32,18 @@ public class UserRepository extends AbstractRepository<User>{
                 userList.add(user);
             }
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new DBException();
         }
         return userList;
     }
 
-    public Optional<User> getByEmail(String email) throws DBException {
+    public Optional<User> getByEmail(String email) {
         Connection connection = getConnection();
         User user = null;
+
+        PreparedStatement preparedStatement = null;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL);
+            preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             user = new User();
@@ -53,7 +54,7 @@ public class UserRepository extends AbstractRepository<User>{
                 user.setEmail(resultSet.getString(4));
                 user.setPassword(resultSet.getString(5));
             }
-        } catch (SQLException troubles) {
+        } catch (SQLException throwables) {
             throw new DBException();
         }
         return Optional.ofNullable(user);

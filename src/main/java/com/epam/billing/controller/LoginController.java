@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @WebServlet(urlPatterns = {"/login"})
@@ -35,10 +36,10 @@ public class LoginController extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        Optional<User> userOptional = null;
+        Optional<User> userOptional = Optional.empty();
         try {
             userOptional = userService.getByEmail(login);
-        } catch (DBException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
