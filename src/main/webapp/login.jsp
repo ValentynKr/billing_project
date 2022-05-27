@@ -14,18 +14,23 @@
 </head>
 
 <body>
-<header>
-    <table>
-        <c:forEach items="${sessionScope.User}" var="user">
-            <tr>
-                <td><c:out value="${user.userId}"/></td>
-                <td><c:out value="${user.name}"/></td>
-                <td><c:out value="${user.admin}"/></td>
-                <td><c:out value="${user.email}"/></td>
-                <td><c:out value="${user.password}"/></td>
-            </tr>
-        </c:forEach>
-    </table>
-</header>
+<form action="<c:url value="/login"/>" method="get">
+    <br/>
+    <header>Hi, please, enter your login and password below</header>
+    <br/>
+    Email (login):
+    <br/>
+    <input type="text" name="login">
+    <br/>
+    <br/>
+    Password: <br/>
+    <input type="text" name="password" />
+    <br/>
+    <br/>
+    <input type="submit" value="Submit" />
+</form>
+<br/>
+<a1 type="text">If you are not registered, click to register <a href="${pageContext.request.contextPath}/jsp/registration.jsp">here</a></a1>
+
 </body>
 </html>
