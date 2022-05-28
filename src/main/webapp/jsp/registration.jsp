@@ -32,5 +32,11 @@
     <br/>
     <input type="submit" value="Submit"/>
 </form>
+<script type="text/javascript">
+    let Msg = '<%=session.getAttribute("Alert")%>';
+    if (Msg == "1") {
+            alert("User with such email is already registered");
+    }
+</script>
 </body>
 </html>

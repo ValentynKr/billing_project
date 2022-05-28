@@ -40,19 +40,19 @@ public class UserRepository extends AbstractRepository<User> {
     public Optional<User> getByEmail(String email) {
         Connection connection = getConnection();
         User user = null;
-
-        PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
-            user = new User();
-            while (resultSet.next()) {
-                user.setUserId(resultSet.getInt(1));
-                user.setName(resultSet.getString(2));
-                user.setAdmin(resultSet.getBoolean(3));
-                user.setEmail(resultSet.getString(4));
-                user.setPassword(resultSet.getString(5));
+            if (resultSet.isBeforeFirst()) {
+                user = new User();
+                while (resultSet.next()) {
+                    user.setUserId(resultSet.getInt(1));
+                    user.setName(resultSet.getString(2));
+                    user.setAdmin(resultSet.getBoolean(3));
+                    user.setEmail(resultSet.getString(4));
+                    user.setPassword(resultSet.getString(5));
+                }
             }
         } catch (SQLException throwables) {
             throw new DBException();

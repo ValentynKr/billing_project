@@ -39,17 +39,18 @@ public class RegistrationController extends HttpServlet {
 
         String email = req.getParameter("email");
 
+        if (userService.getByEmail(email).isPresent()) {
+            req.getSession().setAttribute("Alert", "1");
+            req.getRequestDispatcher("/jsp/registration.jsp").forward(req, resp);
+        } else {
+            String name = req.getParameter("name");
+            String password = req.getParameter("password");
+            User user = new User();
+            user.setName(name).setEmail(email).setAdmin(false).setPassword(password);
+            userService.save(user);
 
-            if (userService.getByEmail(email).isPresent()) {
-                req.getRequestDispatcher("/jsp/registrationErr.jsp").forward(req, resp);
-            } else {
-                String name = req.getParameter("name");
-                String password = req.getParameter("password");
+        }
 
-                User user = new User();
-                user.setName(name).setEmail(email).setAdmin(false).setPassword(password);
-
-                userService.save(user);
-            }
     }
 }
+

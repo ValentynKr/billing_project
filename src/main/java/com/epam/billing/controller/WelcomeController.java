@@ -37,11 +37,6 @@ public class WelcomeController extends HttpServlet {
 
         User testUser = new User();
         testUser.setUserId(4).setName("Lola").setAdmin(false).setEmail("bob@gmail.com").setPassword("444");
-        try {
-            System.out.println(userService.getByEmail(testUser.getEmail()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
     }
 }

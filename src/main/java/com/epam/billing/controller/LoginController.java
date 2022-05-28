@@ -37,12 +37,7 @@ public class LoginController extends HttpServlet {
         String password = req.getParameter("password");
 
         Optional<User> userOptional = Optional.empty();
-        try {
-            userOptional = userService.getByEmail(login);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        userOptional = userService.getByEmail(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(password)) {

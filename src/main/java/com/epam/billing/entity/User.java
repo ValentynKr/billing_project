@@ -20,8 +20,9 @@ public class User {
 
         return userId + ". " +
                 name + " " +
+                status + " " +
                 email + " " +
-                status;
+                password;
     }
 
     public int getUserId() {
