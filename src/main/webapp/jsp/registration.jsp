@@ -37,6 +37,11 @@
     if (Msg == "1") {
             alert("User with such email is already registered");
     }
+    else if (Msg == "2") {
+        alert("Registration was accomplished. Thank you!")
+    }
 </script>
+<hr>
+<a href="<c:url value="/login.jsp"/>">Back to Login page</a>
 </body>
 </html>

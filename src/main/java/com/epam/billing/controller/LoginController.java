@@ -1,26 +1,23 @@
 package com.epam.billing.controller;
 
 import com.epam.billing.entity.User;
-import com.epam.billing.exeption.DBException;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Optional;
 
 @WebServlet(urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
-    UserService userService;
-    ActivityService activityService;
-    ActivityCategoryService activityCategoryService;
-    UserActivityService userActivityService;
-    UserRequestService userRequestService;
+    private UserService userService;
+    private ActivityService activityService;
+    private ActivityCategoryService activityCategoryService;
+    private UserActivityService userActivityService;
+    private UserRequestService userRequestService;
 
     @Override
     public void init() {
@@ -36,8 +33,7 @@ public class LoginController extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        Optional<User> userOptional = Optional.empty();
-        userOptional = userService.getByEmail(login);
+        Optional<User> userOptional = userService.getByEmail(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getPassword().equals(password)) {
@@ -47,10 +43,12 @@ public class LoginController extends HttpServlet {
                     req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
                 }
             } else {
-                req.getRequestDispatcher("/jsp/loginErr.jsp").forward(req, resp);
+                req.getSession().setAttribute("Alert", "3");
+                req.getRequestDispatcher("login.jsp").forward(req, resp);
             }
         } else {
-            req.getRequestDispatcher("/jsp/loginErr2.jsp").forward(req, resp);
+            req.getSession().setAttribute("Alert", "4");
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }
 

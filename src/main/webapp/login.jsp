@@ -32,5 +32,15 @@
 <br/>
 <a1 type="text">If you are not registered, click to register <a href="${pageContext.request.contextPath}/jsp/registration.jsp">here</a></a1>
 
+<script type="text/javascript">
+    let Msg = '<%=session.getAttribute("Alert")%>';
+    if (Msg == "3") {
+        alert("Wrong password!");
+    }
+    else if (Msg == "4") {
+        alert("User with such email is not registered. Please, register!")
+    }
+</script>
+
 </body>
 </html>
