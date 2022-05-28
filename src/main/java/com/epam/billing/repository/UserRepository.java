@@ -2,7 +2,6 @@ package com.epam.billing.repository;
 
 import com.epam.billing.entity.User;
 import com.epam.billing.exeption.DBException;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ public class UserRepository extends AbstractRepository<User> {
     private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM users WHERE id = ?";
     private static final String SELECT_ALL_WHERE_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private static final String SELECT_ID = "SELECT id FROM users WHERE id = ?";
+    private static final String SELECT = "SELECT id FROM users WHERE id = ?";
     private static final String INSERT_USER = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?)";
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE = "UPDATE users SET name=?, admin=?, email=?, pass=? " +
@@ -23,9 +22,8 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public List<User> getAll() {
         List<User> userList = new ArrayList<>();
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = createEntity(resultSet);
@@ -38,10 +36,9 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     public Optional<User> getByEmail(String email) {
-        Connection connection = getConnection();
         User user = null;
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.isBeforeFirst()) {
@@ -62,10 +59,9 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public User getById(long id) {
-
         User user = new User();
-        try (Connection connection = getConnection(); // toDo make try with resources for all repository methods
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID);) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -84,15 +80,13 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public User save(User user) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             preparedStatement.setString(i++, user.getName());
             preparedStatement.setBoolean(i++, user.isAdmin());
             preparedStatement.setString(i++, user.getEmail());
             preparedStatement.setString(i, user.getPassword());
-
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -108,9 +102,8 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public User update(User user) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
             preparedStatement.setString(counter++, user.getName());
             preparedStatement.setBoolean(counter++, user.isAdmin());
@@ -126,9 +119,8 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public boolean delete(User user) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER)) {
             preparedStatement.setInt(1, user.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -140,14 +132,11 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public boolean existById(long id) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong("id") > 0;
-            }
+            return resultSet.isBeforeFirst();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

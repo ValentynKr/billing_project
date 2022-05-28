@@ -40,6 +40,9 @@
     else if (Msg == "2") {
         alert("Registration was accomplished. Thank you!")
     }
+    else if (Msg == "5") {
+        alert("Chosen email is invalid. It should`n contain special symbols or cyrillic letters. Example - ggg@gmail.com")
+    }
 </script>
 <hr>
 <a href="<c:url value="/login.jsp"/>">Back to Login page</a>

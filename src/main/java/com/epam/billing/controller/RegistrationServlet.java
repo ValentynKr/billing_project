@@ -29,18 +29,21 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String email = req.getParameter("email");
-        if (userService.getByEmail(email).isPresent()) {
-            req.getSession().setAttribute("Alert", "1");
-            req.getRequestDispatcher("/jsp/registration.jsp").forward(req, resp);
+        if (EmailValidation.isValid(req.getParameter("email"))) {
+            String email = req.getParameter("email");
+            if (userService.getByEmail(email).isPresent()) {
+                req.getSession().setAttribute("Alert", "1");
+            } else {
+                String name = req.getParameter("name");
+                String password = req.getParameter("password");
+                User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(password);
+                userService.save(user);
+                req.getSession().setAttribute("Alert", "2");
+            }
         } else {
-            String name = req.getParameter("name");
-            String password = req.getParameter("password");
-            User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(password);
-            userService.save(user);
-            req.getSession().setAttribute("Alert", "2");
-            req.getRequestDispatcher("/jsp/registration.jsp").forward(req, resp);
+            req.getSession().setAttribute("Alert", "5");
         }
+        req.getRequestDispatcher("/jsp/registration.jsp").forward(req, resp);
     }
 }
 

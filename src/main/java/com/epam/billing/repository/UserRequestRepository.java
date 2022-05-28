@@ -1,17 +1,15 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.entity.UserRequest;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRequestRepository extends AbstractRepository<UserRequest>{
+public class UserRequestRepository extends AbstractRepository<UserRequest> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_request";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
-    private static final String SELECT_ID = "SELECT id FROM user_request WHERE id = ?";
+    private static final String SELECT = "SELECT id FROM user_request WHERE id = ?";
     private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_request WHERE id = ?";
     private static final String UPDATE = "UPDATE user_request SET user_id=?, request_type=?, request_status=?, " +
@@ -21,9 +19,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
     @Override
     public List<UserRequest> getAll() {
         List<UserRequest> userRequestList = new ArrayList<>();
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 UserRequest userRequest = createEntity(resultSet);
@@ -38,8 +35,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
     @Override
     public UserRequest getById(long id) {
         UserRequest userRequest = new UserRequest();
-        try (Connection connection = getConnection(); // toDo make try with resources for all repository methods
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID);) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -59,9 +56,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
 
     @Override
     public UserRequest save(UserRequest userRequest) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             preparedStatement.setInt(i++, userRequest.getUserRequestId());
             i = insertDataFromEntity(userRequest, preparedStatement, i);
@@ -82,9 +78,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
 
     @Override
     public UserRequest update(UserRequest userRequest) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
             counter = insertDataFromEntity(userRequest, preparedStatement, counter);
             preparedStatement.setString(counter++, userRequest.getComment());
@@ -98,9 +93,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
 
     @Override
     public boolean delete(UserRequest userRequest) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, userRequest.getUserRequestId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -112,14 +106,11 @@ public class UserRequestRepository extends AbstractRepository<UserRequest>{
 
     @Override
     public boolean existById(long id) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong("id") > 0;
-            }
+            return resultSet.isBeforeFirst();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

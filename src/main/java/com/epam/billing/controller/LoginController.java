@@ -32,7 +32,6 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-
         Optional<User> userOptional = userService.getByEmail(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -52,8 +51,4 @@ public class LoginController extends HttpServlet {
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
 }

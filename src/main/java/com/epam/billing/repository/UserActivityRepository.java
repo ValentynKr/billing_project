@@ -1,13 +1,11 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.entity.UserActivity;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserActivityRepository extends AbstractRepository<UserActivity>{
+public class UserActivityRepository extends AbstractRepository<UserActivity> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_activities";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
@@ -18,11 +16,10 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
             "WHERE id=?";
 
     @Override
-    public List<UserActivity> getAll() {          // <---- should make such but by name of user
+    public List<UserActivity> getAll() {
         List<UserActivity> userActivityList = new ArrayList<>();
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 UserActivity userActivity = createEntity(resultSet);
@@ -37,8 +34,8 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
     @Override
     public UserActivity getById(long id) {
         UserActivity userActivity = new UserActivity();
-        try (Connection connection = getConnection(); // toDo make try with resources for all repository methods
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID);) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -55,15 +52,13 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
 
     @Override
     public UserActivity save(UserActivity userActivity) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             preparedStatement.setInt(i++, userActivity.getUserActivityId());
             preparedStatement.setInt(i++, userActivity.getActivityId());
             preparedStatement.setInt(i++, userActivity.getUserId());
             preparedStatement.setInt(i, userActivity.getDurationOfActivity());
-
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -79,9 +74,8 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
 
     @Override
     public UserActivity update(UserActivity userActivity) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
             preparedStatement.setInt(counter++, userActivity.getActivityId());
             preparedStatement.setInt(counter++, userActivity.getUserId());
@@ -96,9 +90,8 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
 
     @Override
     public boolean delete(UserActivity userActivity) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, userActivity.getUserActivityId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -110,14 +103,11 @@ public class UserActivityRepository extends AbstractRepository<UserActivity>{
 
     @Override
     public boolean existById(long id) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong("id") > 0;
-            }
+            return resultSet.isBeforeFirst();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

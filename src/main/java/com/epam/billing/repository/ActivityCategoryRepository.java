@@ -10,7 +10,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     private static final String SELECT_ALL = "SELECT * FROM activity_category";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity_category WHERE id = ?";
-    private static final String SELECT_ID = "SELECT id FROM activity_category WHERE id = ?";
+    private static final String SELECT = "SELECT id FROM activity_category WHERE id = ?";
     private static final String INSERT_ACTIVITY_CATEGORY = "INSERT INTO activity_category VALUES (DEFAULT, ?)";
     private static final String DELETE_ACTIVITY_CATEGORY = "DELETE FROM activity_category WHERE id = ?";
     private static final String UPDATE = "UPDATE activity_category SET name=? " +
@@ -19,9 +19,8 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
     @Override
     public List<ActivityCategory> getAll() {
         List<ActivityCategory> activityCategoryList = new ArrayList<>();
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 ActivityCategory activityCategory = createEntity(resultSet);
@@ -36,8 +35,8 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
     @Override
     public ActivityCategory getById(long id) {
         ActivityCategory activityCategory = new ActivityCategory();
-        try (Connection connection = getConnection(); // toDo make try with resources for all repository methods
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID);) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -52,13 +51,12 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     @Override
     public ActivityCategory save(ActivityCategory activityCategory) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ACTIVITY_CATEGORY, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_ACTIVITY_CATEGORY,
+                     Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             preparedStatement.setInt(i++, activityCategory.getCategoryId());
             preparedStatement.setString(i, activityCategory.getCategotyName());
-
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -74,9 +72,8 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     @Override
     public ActivityCategory update(ActivityCategory activityCategory) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
             preparedStatement.setString(counter++, activityCategory.getCategotyName());
             preparedStatement.setLong(counter, activityCategory.getCategoryId());
@@ -89,9 +86,8 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     @Override
     public boolean delete(ActivityCategory activityCategory) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ACTIVITY_CATEGORY);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_ACTIVITY_CATEGORY)) {
             preparedStatement.setInt(1, activityCategory.getCategoryId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -103,14 +99,11 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     @Override
     public boolean existById(long id) {
-        Connection connection = getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID);
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong("id") > 0;
-            }
+            return resultSet.isBeforeFirst();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
