@@ -40,6 +40,8 @@
     else if (Msg == "4") {
         alert("User with such email is not registered. Please, register!")
     }
+
+
 </script>
 
 </body>

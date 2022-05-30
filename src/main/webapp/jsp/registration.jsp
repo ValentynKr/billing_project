@@ -43,6 +43,9 @@
     else if (Msg == "5") {
         alert("Chosen email is invalid. It should`n contain special symbols or cyrillic letters. Example - ggg@gmail.com")
     }
+    else if (Msg == "8") {
+        alert("Chosen pass is invalid. It should contain at least 8 symbols, including number, letter and special symbol")
+    }
 </script>
 <hr>
 <a href="<c:url value="/login.jsp"/>">Back to Login page</a>

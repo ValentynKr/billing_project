@@ -1,7 +1,9 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.validation.Validation;
 import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,16 +31,21 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (EmailValidation.isValid(req.getParameter("email"))) {
-            String email = req.getParameter("email");
-            if (userService.getByEmail(email).isPresent()) {
-                req.getSession().setAttribute("Alert", "1");
+
+        if (Validation.emailIsValid(req.getParameter("email"))) {
+            if (Validation.passwordIsValid(req.getParameter("password"))) {
+                String email = req.getParameter("email");
+                if (userService.getByEmail(email).isPresent()) {
+                    req.getSession().setAttribute("Alert", "1");
+                } else {
+                    String name = req.getParameter("name");
+                    String password = req.getParameter("password");
+                    User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(password);
+                    userService.save(user);
+                    req.getSession().setAttribute("Alert", "2");
+                }
             } else {
-                String name = req.getParameter("name");
-                String password = req.getParameter("password");
-                User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(password);
-                userService.save(user);
-                req.getSession().setAttribute("Alert", "2");
+                req.getSession().setAttribute("Alert", "8");
             }
         } else {
             req.getSession().setAttribute("Alert", "5");
@@ -46,4 +53,3 @@ public class RegistrationServlet extends HttpServlet {
         req.getRequestDispatcher("/jsp/registration.jsp").forward(req, resp);
     }
 }
-
