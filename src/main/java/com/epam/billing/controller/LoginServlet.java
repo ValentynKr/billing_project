@@ -30,6 +30,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         Optional<User> userOptional = userService.getByEmail(login);
@@ -42,13 +43,12 @@ public class LoginServlet extends HttpServlet {
                     req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
                 }
             } else {
-                req.getSession().setAttribute("Alert", "3");
+                req.getSession().setAttribute("Alert", "Wrong password!");
                 req.getRequestDispatcher("login.jsp").forward(req, resp);
             }
         } else {
-            req.getSession().setAttribute("Alert", "4");
+            req.getSession().setAttribute("Alert", "User with such email is not registered. Please, register!");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
         }
     }
-
 }

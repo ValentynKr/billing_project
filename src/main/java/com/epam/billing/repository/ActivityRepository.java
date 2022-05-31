@@ -9,7 +9,7 @@ public class ActivityRepository extends AbstractRepository<Activity>{
 
     private static final String SELECT_ALL = "SELECT * FROM activity";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity WHERE id = ?";
-    private static final String SELECT = "SELECT id FROM activity WHERE id = ?";
+    private static final String EXIST_BY_ID = "SELECT * FROM activity WHERE EXISTS(SELECT * FROM activity WHERE id = ?)";
     private static final String INSERT = "INSERT INTO activity VALUES (DEFAULT, ?, ?)";
     private static final String DELETE = "DELETE FROM activity WHERE id = ?";
     private static final String UPDATE = "UPDATE activity SET category_id=?, name=? WHERE id = ?";
@@ -100,10 +100,10 @@ public class ActivityRepository extends AbstractRepository<Activity>{
     @Override
     public boolean existById(long id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.isBeforeFirst();
+            return resultSet.next();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

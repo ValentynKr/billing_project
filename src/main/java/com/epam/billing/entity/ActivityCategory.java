@@ -3,7 +3,7 @@ package com.epam.billing.entity;
 public class ActivityCategory {
 
     private int categoryId;
-    private String categotyName;
+    private String categoryName;
 
     public int getCategoryId() {
         return categoryId;
@@ -14,12 +14,12 @@ public class ActivityCategory {
         return this;
     }
 
-    public String getCategotyName() {
-        return categotyName;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public ActivityCategory setCategotyName(String categotyName) {
-        this.categotyName = categotyName;
+    public ActivityCategory setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
         return this;
     }
 }

@@ -40,21 +40,23 @@
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="login.button"/></button>
     </form>
 
+    <c:if test="${not empty sessionScope.Alert}">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="alert alert-danger"><p class="text-center"><strong>${sessionScope.Alert}</strong></p></div>
+                <c:remove var="Alert"/>
+            </div>
+        </div>
+    </c:if>
+
 </div>
+
+
 
 <div class="alert alert-light fade in text-center" role="alert">
     <fmt:message key="notification.ifNotRegistered"/> <a
         href="${pageContext.request.contextPath}/jsp/registration.jsp">here</a>
 </div>
-
-<script type="text/javascript">
-    let msg = '<%=session.getAttribute("Alert")%>';
-    if (msg == "3") {
-        alert("Wrong password!");
-    } else if (msg == "4") {
-        alert("User with such email is not registered. Please, register!")
-    }
-</script>
 
 <script src="/billing_project/js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>

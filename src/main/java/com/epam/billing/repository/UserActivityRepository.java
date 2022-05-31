@@ -9,7 +9,8 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_activities";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
-    private static final String SELECT = "SELECT id FROM user_activities WHERE id = ?";
+    private static final String EXIST_BY_ID = "SELECT * FROM user_activities WHERE EXISTS (SELECT * " +
+            "FROM user_activities WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_activities VALUES (DEFAULT, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_activities WHERE id = ?";
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
@@ -104,10 +105,10 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     @Override
     public boolean existById(long id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.isBeforeFirst();
+            return resultSet.next();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

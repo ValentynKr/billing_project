@@ -12,8 +12,8 @@
 <head>
 
     <title><fmt:message key="registration.title" /></title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/signin.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/signin.css" rel="stylesheet">
 
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -39,28 +39,21 @@
         <input type="password" class="form-control" name="password" placeholder="<fmt:message key="placeholder.password"/>" required/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="registration.button"/></button>
     </form>
+    <c:if test="${not empty sessionScope.Alert}">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="alert alert-danger"><p class="text-center"><strong>${sessionScope.Alert}</strong></p></div>
+                <c:remove var="Alert"/>
+            </div>
+        </div>
+    </c:if>
 
 </div>
 
-<script type="text/javascript">
-    let msg = '<%=session.getAttribute("Alert")%>';
-    if (msg == "1") {
-            alert("User with such email is already registered");
-    }
-    else if (msg == "2") {
-        alert("Registration was accomplished. Thank you!")
-    }
-    else if (msg == "5") {
-        alert("Chosen email is invalid. It should`n contain special symbols or cyrillic letters. Example - ggg@gmail.com")
-    }
-    else if (msg == "8") {
-        alert("Chosen pass is invalid. It should contain at least 8 symbols, including number, letter and special symbol")
-    }
-</script>
 <hr>
 <a href="<c:url value="/login.jsp"/>">Back to Login page</a>
 
-<script src="/billing_project/js/jquery.min.js"></script>
+<script src="../billing_project/js/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 
 </body>

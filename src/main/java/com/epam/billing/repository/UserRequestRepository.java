@@ -9,7 +9,7 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_request";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
-    private static final String SELECT = "SELECT id FROM user_request WHERE id = ?";
+    private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_request WHERE id = ?";
     private static final String UPDATE = "UPDATE user_request SET user_id=?, request_type=?, request_status=?, " +
@@ -107,10 +107,10 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     @Override
     public boolean existById(long id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.isBeforeFirst();
+            return resultSet.next();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

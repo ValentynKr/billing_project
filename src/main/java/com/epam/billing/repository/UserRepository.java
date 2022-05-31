@@ -12,9 +12,9 @@ public class UserRepository extends AbstractRepository<User> {
     private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM users WHERE id = ?";
     private static final String SELECT_ALL_WHERE_EMAIL = "SELECT * FROM users WHERE email = ?";
-    private static final String SELECT = "SELECT id FROM users WHERE id = ?";
-    private static final String INSERT_USER = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?)";
-    private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
+    private static final String EXIST_BY_ID = "SELECT * FROM users WHERE EXISTS(SELECT * FROM users WHERE id = ?)";
+    private static final String INSERT = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?)";
+    private static final String DELETE = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE = "UPDATE users SET name=?, admin=?, email=?, pass=? " +
             "WHERE id=?";
 
@@ -81,7 +81,7 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public User save(User user) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
             preparedStatement.setString(i++, user.getName());
             preparedStatement.setBoolean(i++, user.isAdmin());
@@ -120,7 +120,7 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public boolean delete(User user) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE)) {
             preparedStatement.setInt(1, user.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -133,10 +133,10 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public boolean existById(long id) {
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.isBeforeFirst();
+            return resultSet.next();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
