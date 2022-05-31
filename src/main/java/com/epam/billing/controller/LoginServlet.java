@@ -1,7 +1,10 @@
 package com.epam.billing.controller;
 
 import com.epam.billing.entity.User;
+import com.epam.billing.exeption.AppException;
 import com.epam.billing.service.*;
+import com.epam.billing.utils.PasswordHashingUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,15 +39,19 @@ public class LoginServlet extends HttpServlet {
         Optional<User> userOptional = userService.getByEmail(login);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if (user.getPassword().equals(password)) {
-                if (user.isAdmin()) {
-                    req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
+            try {
+                if (PasswordHashingUtil.check(password, user.getPassword())) {
+                    if (user.isAdmin()) {
+                        req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
+                    } else {
+                        req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
+                    }
                 } else {
-                    req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
+                    req.getSession().setAttribute("Alert", "Wrong password!");
+                    req.getRequestDispatcher("login.jsp").forward(req, resp);
                 }
-            } else {
-                req.getSession().setAttribute("Alert", "Wrong password!");
-                req.getRequestDispatcher("login.jsp").forward(req, resp);
+            } catch (AppException e) {
+                e.printStackTrace();
             }
         } else {
             req.getSession().setAttribute("Alert", "User with such email is not registered. Please, register!");
