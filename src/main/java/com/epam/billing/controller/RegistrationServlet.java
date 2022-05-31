@@ -1,6 +1,6 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.validation.Validation;
+import com.epam.billing.validation.ValidationUtil;
 import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
     private UserService userService;
-    private ActivityService activityService;
+    private ActivityService activityService;  // toDo delete unused variables after testing
     private ActivityCategoryService activityCategoryService;
     private UserActivityService userActivityService;
     private UserRequestService userRequestService;
@@ -31,21 +31,20 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
-        if (Validation.emailIsValid(req.getParameter("email"))) {
-            if (Validation.passwordIsValid(req.getParameter("password"))) {
-                String email = req.getParameter("email");
-                if (userService.getByEmail(email).isPresent()) {
-                    req.getSession().setAttribute("Alert", "1");
-                } else {
+        if (ValidationUtil.isEmailValid(req.getParameter("email"))) { //toDo need to be refactored
+            String email = req.getParameter("email");
+            if (userService.getByEmail(email).isPresent()) {
+                req.getSession().setAttribute("Alert", "1");
+            } else {
+                if (ValidationUtil.isPasswordValid(req.getParameter("password"))) {
                     String name = req.getParameter("name");
                     String password = req.getParameter("password");
                     User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(password);
                     userService.save(user);
                     req.getSession().setAttribute("Alert", "2");
+                } else {
+                    req.getSession().setAttribute("Alert", "8");
                 }
-            } else {
-                req.getSession().setAttribute("Alert", "8");
             }
         } else {
             req.getSession().setAttribute("Alert", "5");

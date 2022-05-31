@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServlet;
 
 
 @WebServlet(urlPatterns = {"/welcome"})
-public class WelcomeController extends HttpServlet {
+public class WelcomeServlet extends HttpServlet {
     private UserService userService;
     private ActivityService activityService;
     private ActivityCategoryService activityCategoryService;

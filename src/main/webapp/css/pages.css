@@ -1,0 +1,101 @@
+.btn-group {
+	padding-top: 5px;
+	padding-right: 5px;
+}
+
+.spec-button {
+	padding: 0px;
+}
+
+.btn-group .logout {
+	margin-left: 5px;
+}
+
+.set-height {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.addtrip-heading {
+	margin-top: 0;
+	margin-bottom: 5px;
+}
+
+.addtrip-heading-inner {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.form-adduser,
+.form-addcar,
+.form-addtrip {
+  max-width: 330px;
+  padding-bottom: 15px;
+  margin: 0 auto;
+}
+
+.edit-trip [type="text"],
+.edit-trip [type="number"] {
+	width: 120px;
+}
+
+.alert {
+	font-size: 16px;
+}
+
+.error {
+	margin-top: 45px;
+	height: 480px;
+}
+
+.error .text-center {
+	margin-top: 210px;
+}
+
+.trips {
+	margin-bottom: 15px;
+}
+
+.form-adduser .form-control,
+.form-addcar .form-control,
+.form-addtrip .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-adduser .form-control:focus,
+.form-addcar .form-control:focus,
+.form-addtrip .form-control:focus {
+  z-index: 2;
+}
+
+.form-adduser input[name="email"],
+.form-addcar input[name="model"],
+.form-addtrip input[name="destination"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-adduser input[type="text"], 
+.form-addcar select,
+.form-addcar input[name="horsepower"],
+.form-addcar input[name="capacity"],
+.form-addtrip .box {
+  margin-bottom: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-adduser select[name="role"],
+.form-addcar input[name="approx_mileage"],
+.form-addtrip select[name="cargo_type"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
