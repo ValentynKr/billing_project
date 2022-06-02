@@ -3,13 +3,14 @@ package com.epam.billing.controller;
 import com.epam.billing.entity.User;
 import com.epam.billing.exeption.AppException;
 import com.epam.billing.service.*;
+import com.epam.billing.utils.DataConverter;
 import com.epam.billing.utils.PasswordHashingUtil;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -41,9 +42,13 @@ public class LoginServlet extends HttpServlet {
             User user = userOptional.get();
             try {
                 if (PasswordHashingUtil.check(password, user.getPassword())) {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("user", user);
                     if (user.isAdmin()) {
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
+                       req.getSession().setAttribute("userActivities", DataConverter
+                                .userActivityConverter(userActivityService.getByUserId(user.getUserId())));
                         req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
                     }
                 } else {

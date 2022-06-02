@@ -9,6 +9,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_activities";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
+    private static final String SELECT_BY_USER_ID = "SELECT * FROM user_activities WHERE user_id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_activities WHERE EXISTS (SELECT * " +
             "FROM user_activities WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_activities VALUES (DEFAULT, ?, ?, ?)";
@@ -23,7 +24,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                UserActivity userActivity = createEntity(resultSet);
+                UserActivity userActivity = createEntity(resultSet); // toDo refactoring: make Class only once
                 userActivityList.add(userActivity);
             }
         } catch (SQLException throwables) {
@@ -113,6 +114,23 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             throwables.printStackTrace();
         }
         return false;
+    }
+
+    public List<UserActivity> getByUserId(long userId) {
+        List<UserActivity> userActivityList = new ArrayList<>();
+        UserActivity userActivity = new UserActivity();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USER_ID)) {
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userActivity = createEntity(resultSet);
+                userActivityList.add(userActivity);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivityList;
     }
 
     private UserActivity createEntity(ResultSet resultSet) throws SQLException {

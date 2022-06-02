@@ -7,6 +7,14 @@ public class UserActivity {
     private int userId;
     private int durationOfActivity;
 
+    public String toString() {
+
+        return userActivityId + ". " +
+                activityId + " " +
+                userId + " " +
+                durationOfActivity;
+    }
+
     public int getUserActivityId() {
         return userActivityId;
     }
