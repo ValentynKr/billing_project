@@ -1,11 +1,8 @@
 package com.epam.billing.service;
 
 import com.epam.billing.entity.User;
-import com.epam.billing.exeption.DBException;
-import com.epam.billing.joins.UserNameJoin;
 import com.epam.billing.repository.UserRepository;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

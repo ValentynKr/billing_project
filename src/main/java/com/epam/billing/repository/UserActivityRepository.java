@@ -1,7 +1,6 @@
 package com.epam.billing.repository;
 
 import com.epam.billing.entity.UserActivity;
-import com.epam.billing.joins.UserNameJoin;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,15 +11,6 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String SELECT_ALL = "SELECT * FROM user_activities";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
     private static final String SELECT_BY_USER_ID = "SELECT * FROM user_activities WHERE user_id = ?";
-    private static final String JOIN_USER_NAME =
-            "SELECT \n" +
-                    "activity.name, user_activities.user_id, users.name , user_activities.duration \n" +
-                    "FROM  user_activities\n" +
-                    "inner JOIN activity\n" +
-                    "on user_activities.activity_id = activity.id\n" +
-                    "inner join users\n" +
-                    "on user_activities.user_id = users.id\n" +
-                    "where user_id=?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_activities WHERE EXISTS (SELECT * " +
             "FROM user_activities WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_activities VALUES (DEFAULT, ?, ?, ?)";
@@ -102,6 +92,21 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return userActivity;
     }
 
+    public UserActivity updateUserActivityDuration(float duration) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
+            int counter = 1;
+            preparedStatement.setInt(counter++, userActivity.getActivityId());
+            preparedStatement.setInt(counter++, userActivity.getUserId());
+            preparedStatement.setFloat(counter++, userActivity.getDurationOfActivity());
+            preparedStatement.setLong(counter, userActivity.getUserActivityId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivity;
+    }
+
     @Override
     public boolean delete(UserActivity userActivity) {
         try (Connection connection = getConnection();
@@ -143,26 +148,6 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             throwables.printStackTrace();
         }
         return userActivityList;
-    }
-
-    public List<UserNameJoin> getNameActivityJoin(int userId) {
-        List<UserNameJoin> userNameJoins = new ArrayList<>();
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
-            preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                UserNameJoin userNameJoin = new UserNameJoin();
-                userNameJoin.setActivityName(resultSet.getString(1));
-                userNameJoin.setUserId(resultSet.getInt(2));
-                userNameJoin.setUserName(resultSet.getString(3));
-                userNameJoin.setActivityDuration(resultSet.getFloat(4));
-                userNameJoins.add(userNameJoin);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return userNameJoins;
     }
 
     private UserActivity createEntity(ResultSet resultSet) throws SQLException {
