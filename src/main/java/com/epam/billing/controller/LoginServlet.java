@@ -46,10 +46,11 @@ public class LoginServlet extends HttpServlet {
                     if (user.isAdmin()) {
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
-                        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
-                        req.getSession().setAttribute("userActivities", userActivityUserNameIdDurationRecording.getUserActivityUserNameIdDurationDTO(user.getUserId()));
-                        //   req.getSession().setAttribute("userActivities",
-                     //           userActivityService.getUserNameJoin(user.getUserId()));
+                        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording =
+                                new UserActivityUserNameIdDurationRecording();
+                        req.getSession().setAttribute("userActivities",
+                                userActivityUserNameIdDurationRecording
+                                        .getUserActivityUserNameIdDurationDTO(user.getUserId()));
                         req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
                     }
                 } else {

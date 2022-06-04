@@ -5,7 +5,6 @@ import com.epam.billing.utils.PasswordHashingUtil;
 import com.epam.billing.utils.ValidationUtil;
 import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,18 +15,11 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/registration"})
 public class RegistrationServlet extends HttpServlet {
     private UserService userService;
-    private ActivityService activityService;  // toDo delete unused variables after testing
-    private ActivityCategoryService activityCategoryService;
-    private UserActivityService userActivityService;
-    private UserRequestService userRequestService;
+
 
     @Override
     public void init() {
         userService = (UserService) getServletContext().getAttribute("userService");
-        activityService = (ActivityService) getServletContext().getAttribute("activityService");
-        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
-        userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
-        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
     }
 
     @Override

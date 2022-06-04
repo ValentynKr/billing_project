@@ -2,6 +2,7 @@ package com.epam.billing.service;
 
 import com.epam.billing.entity.UserActivity;
 import com.epam.billing.repository.UserActivityRepository;
+
 import java.util.List;
 
 public class UserActivityService {
@@ -36,5 +37,11 @@ public class UserActivityService {
         return userActivityRepository.update(userActivity);
     }
 
-    public List<UserActivity> getByUserId(long id) {return userActivityRepository.getByUserId(id); }
+    public List<UserActivity> getByUserId(long id) {
+        return userActivityRepository.getByUserId(id);
+    }
+
+    public List<UserActivity> getByActivityId(long activityId) {
+        return userActivityRepository.getUserActivityByActivityId(activityId);
+    }
 }

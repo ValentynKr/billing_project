@@ -9,6 +9,7 @@ public class ActivityRepository extends AbstractRepository<Activity>{
 
     private static final String SELECT_ALL = "SELECT * FROM activity";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity WHERE id = ?";
+    private static final String SELECT_ALL_WHERE_NAME = "SELECT * FROM activity WHERE name = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM activity WHERE EXISTS(SELECT * FROM activity WHERE id = ?)";
     private static final String INSERT = "INSERT INTO activity VALUES (DEFAULT, ?, ?)";
     private static final String DELETE = "DELETE FROM activity WHERE id = ?";
@@ -47,6 +48,24 @@ public class ActivityRepository extends AbstractRepository<Activity>{
         }
         return activity;
     }
+
+    public Activity getByName(String name) {
+        Activity activity = new Activity();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                activity.setActivityId(resultSet.getInt(1));
+                activity.setCategoryOfActivityId(resultSet.getInt(2));
+                activity.setName(resultSet.getString(3));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activity;
+    }
+
 
     @Override
     public Activity save(Activity activity) {

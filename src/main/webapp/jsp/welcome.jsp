@@ -69,11 +69,29 @@
                 <tr>
                     <td>${userActivity.activityName}</td>
                     <td>${userActivity.activityDuration}</td>
+                    <td>
+                        <form class="form-group" action="${pageContext.request.contextPath}/addUserActivityDuration"
+                              method="post">
+                            <input type="text" class="form" name="userActivityNewDuration"
+                                   placeholder="<fmt:message key="placeholder.userActivityDuration"/>">
+                            <input type="hidden" name="userActivityName" value="${userActivity.activityName}">
+                            <button class="btn btn-xs btn-default" type="submit"><fmt:message
+                                    key="button.submit"/></button>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
     </div>
 </div>
+<c:if test="${not empty sessionScope.Alert}">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="alert alert-danger"><p class="text-center"><strong>${sessionScope.Alert}</strong></p></div>
+            <c:remove var="Alert"/>
+        </div>
+    </div>
+</c:if>
 </body>
 </html>

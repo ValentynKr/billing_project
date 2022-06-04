@@ -33,9 +33,9 @@ public class ActivityService {
         return activityRepository.existById(id);
     }
 
-    public Activity getById(long id) {
-        return activityRepository.getById(id);
-    }
+    public Activity getById(long id) { return activityRepository.getById(id); }
+
+    public Activity getByName(String name) { return activityRepository.getByName(name); }
 
     public Activity update(Activity activity) {
         return activityRepository.update(activity);
