@@ -14,15 +14,19 @@ public class UserActivityUserNameIdDurationRecording {
 
     private static final String JOIN_USER_NAME =
             "SELECT \n" +
-                    "activity.name, user_activities.user_id, users.name , user_activities.duration \n" +
+                    "activity_category.name, activity.name, users.name , user_activities.duration \n" +
                     "FROM  user_activities\n" +
                     "inner JOIN activity\n" +
                     "on user_activities.activity_id = activity.id\n" +
                     "inner join users\n" +
                     "on user_activities.user_id = users.id\n" +
+                    "inner join activity_category\n" +
+                    "on activity.category_id = activity_category.id\n" +
                     "where user_id=?";
+
+
+    String activityCategoryName;
     String activityName;
-    int userId;
     String userName;
     float activityDuration;
 
@@ -32,14 +36,13 @@ public class UserActivityUserNameIdDurationRecording {
         return connectionManager.getConnection();
     }
 
-    @Override
-    public String toString() {
-        return "UserNameJoin{" +
-                "activityName='" + activityName + '\'' +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", activityDuration=" + activityDuration +
-                '}';
+    public String getActivityCategoryName() {
+        return activityCategoryName;
+    }
+
+    public UserActivityUserNameIdDurationRecording setActivityCategoryName(String activityCategoryName) {
+        this.activityCategoryName = activityCategoryName;
+        return this;
     }
 
     public String getActivityName() {
@@ -48,15 +51,6 @@ public class UserActivityUserNameIdDurationRecording {
 
     public UserActivityUserNameIdDurationRecording setActivityName(String activityName) {
         this.activityName = activityName;
-        return this;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public UserActivityUserNameIdDurationRecording setUserId(int userId) {
-        this.userId = userId;
         return this;
     }
 
@@ -78,7 +72,6 @@ public class UserActivityUserNameIdDurationRecording {
         return this;
     }
 
-
     public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int userId) {
         List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
         UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
@@ -88,8 +81,8 @@ public class UserActivityUserNameIdDurationRecording {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
-                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(1));
-                userActivityUserNameIdDurationRecording.setUserId(resultSet.getInt(2));
+                userActivityUserNameIdDurationRecording.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(2));
                 userActivityUserNameIdDurationRecording.setUserName(resultSet.getString(3));
                 userActivityUserNameIdDurationRecording.setActivityDuration(resultSet.getFloat(4));
                 userActivityUserNameIdDurationRecordings.add(userActivityUserNameIdDurationRecording);

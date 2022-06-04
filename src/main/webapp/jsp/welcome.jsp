@@ -60,13 +60,15 @@
         <table class="table">
             <thead>
             <tr>
-                <th><fmt:message key="userActivity.activityId"/></th>
+                <th><fmt:message key="userActivity.activityCategoryName"/></th>
+                <th><fmt:message key="userActivity.activityName"/></th>
                 <th><fmt:message key="userActivity.durationOfActivity"/></th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="userActivity" items="${sessionScope.userActivities}">
                 <tr>
+                    <td>${userActivity.activityCategoryName}</td>
                     <td>${userActivity.activityName}</td>
                     <td>${userActivity.activityDuration}</td>
                     <td>
@@ -83,8 +85,29 @@
             </c:forEach>
             </tbody>
         </table>
+        <div class="form-group">
+            <label for="typeOfRequest">Request type for admin</label>
+            <select class="form-control" id="typeOfRequest">
+                <option>Create</option>
+                <option>Delete</option>
+                <option>Edit</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="activityNameForRequest">Activity name</label>
+            <select class="form-control" id="activityNameForRequest">
+                <option>Activity1</option>
+                <option>Activity2</option>
+                <option>Activity3</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="commentForAdmin">Comment</label>
+            <input type="text" class="form-control" id="commentForAdmin" placeholder="<fmt:message key="placeholder.comment"/>">
+        </div>
     </div>
 </div>
+
 <c:if test="${not empty sessionScope.Alert}">
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
