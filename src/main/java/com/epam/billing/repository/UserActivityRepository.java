@@ -1,6 +1,8 @@
 package com.epam.billing.repository;
 
 import com.epam.billing.entity.UserActivity;
+import com.epam.billing.joins.UserNameJoin;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +12,22 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String SELECT_ALL = "SELECT * FROM user_activities";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
     private static final String SELECT_BY_USER_ID = "SELECT * FROM user_activities WHERE user_id = ?";
+    private static final String JOIN_USER_NAME =
+            "SELECT \n" +
+                    "activity.name, user_activities.user_id, users.name , user_activities.duration \n" +
+                    "FROM  user_activities\n" +
+                    "inner JOIN activity\n" +
+                    "on user_activities.activity_id = activity.id\n" +
+                    "inner join users\n" +
+                    "on user_activities.user_id = users.id\n" +
+                    "where user_id=?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_activities WHERE EXISTS (SELECT * " +
             "FROM user_activities WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_activities VALUES (DEFAULT, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_activities WHERE id = ?";
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
             "WHERE id=?";
+
 
     @Override
     public List<UserActivity> getAll() {
@@ -44,7 +56,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
                 userActivity.setUserActivityId(resultSet.getInt(1));
                 userActivity.setActivityId(resultSet.getInt(2));
                 userActivity.setUserId(resultSet.getInt(3));
-                userActivity.setDurationOfActivity(resultSet.getInt(4));
+                userActivity.setDurationOfActivity(resultSet.getFloat(4));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -60,7 +72,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             preparedStatement.setInt(i++, userActivity.getUserActivityId());
             preparedStatement.setInt(i++, userActivity.getActivityId());
             preparedStatement.setInt(i++, userActivity.getUserId());
-            preparedStatement.setInt(i, userActivity.getDurationOfActivity());
+            preparedStatement.setFloat(i, userActivity.getDurationOfActivity());
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -81,7 +93,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             int counter = 1;
             preparedStatement.setInt(counter++, userActivity.getActivityId());
             preparedStatement.setInt(counter++, userActivity.getUserId());
-            preparedStatement.setInt(counter++, userActivity.getDurationOfActivity());
+            preparedStatement.setFloat(counter++, userActivity.getDurationOfActivity());
             preparedStatement.setLong(counter, userActivity.getUserActivityId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -118,7 +130,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
 
     public List<UserActivity> getByUserId(long userId) {
         List<UserActivity> userActivityList = new ArrayList<>();
-        UserActivity userActivity = new UserActivity();
+        UserActivity userActivity;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USER_ID)) {
             preparedStatement.setLong(1, userId);
@@ -133,12 +145,32 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return userActivityList;
     }
 
+    public List<UserNameJoin> getNameActivityJoin(int userId) {
+        List<UserNameJoin> userNameJoins = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                UserNameJoin userNameJoin = new UserNameJoin();
+                userNameJoin.setActivityName(resultSet.getString(1));
+                userNameJoin.setUserId(resultSet.getInt(2));
+                userNameJoin.setUserName(resultSet.getString(3));
+                userNameJoin.setActivityDuration(resultSet.getFloat(4));
+                userNameJoins.add(userNameJoin);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userNameJoins;
+    }
+
     private UserActivity createEntity(ResultSet resultSet) throws SQLException {
         UserActivity userActivity = new UserActivity();
         userActivity.setUserActivityId(resultSet.getInt("id"));
         userActivity.setActivityId(resultSet.getInt("activity_id"));
         userActivity.setUserActivityId(resultSet.getInt("user_id"));
-        userActivity.setDurationOfActivity(resultSet.getInt("duration"));
+        userActivity.setDurationOfActivity(resultSet.getFloat("duration"));
         return userActivity;
     }
 }

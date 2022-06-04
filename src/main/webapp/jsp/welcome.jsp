@@ -67,8 +67,8 @@
             <tbody>
             <c:forEach var="userActivity" items="${sessionScope.userActivities}">
                 <tr>
-                    <td>${userActivity.key}</td>
-                    <td>${userActivity.value}</td>
+                    <td>${userActivity.activityName}</td>
+                    <td>${userActivity.activityDuration}</td>
                 </tr>
             </c:forEach>
             </tbody>

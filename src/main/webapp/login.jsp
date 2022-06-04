@@ -33,7 +33,7 @@
 </div>
 
 <div class="container-fluid">
-    <form class="form-signin" action="<c:url value="/login"/>" method="get">
+    <form class="form-signin" action="<c:url value="/login"/>" method="post">
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="login.label"/></h2>
         <input type="text" class="form-control" name="login" placeholder="<fmt:message key="placeholder.email"/>" required autofocus/>
         <input type="password" class="form-control" name="password" placeholder="<fmt:message key="placeholder.password"/>" required/>

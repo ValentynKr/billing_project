@@ -5,7 +5,7 @@ public class UserActivity {
     private int userActivityId;
     private int activityId;
     private int userId;
-    private int durationOfActivity;
+    private float durationOfActivity;
 
     public String toString() {
 
@@ -42,11 +42,11 @@ public class UserActivity {
         return this;
     }
 
-    public int getDurationOfActivity() {
+    public float getDurationOfActivity() {
         return durationOfActivity;
     }
 
-    public UserActivity setDurationOfActivity(int durationOfActivity) {
+    public UserActivity setDurationOfActivity(float durationOfActivity) {
         this.durationOfActivity = durationOfActivity;
         return this;
     }
