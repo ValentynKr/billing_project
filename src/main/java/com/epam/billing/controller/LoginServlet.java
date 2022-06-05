@@ -1,8 +1,12 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.entity.RequestStatus;
+import com.epam.billing.entity.RequestType;
 import com.epam.billing.entity.User;
+import com.epam.billing.entity.UserRequest;
 import com.epam.billing.exeption.AppException;
 import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
+import com.epam.billing.repository.UserRequestRepository;
 import com.epam.billing.service.*;
 import com.epam.billing.utils.PasswordHashingUtil;
 
@@ -20,16 +24,23 @@ public class LoginServlet extends HttpServlet {
 
     private UserService userService;
     private UserActivityService userActivityService;
+    private UserRequestService userRequestService;
 
     @Override
     public void init() {
         userService = (UserService) getServletContext().getAttribute("userService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
+        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+
+        UserRequest request = new UserRequest();
+        request.setUserId(1).setRequestType(RequestType.CREATE).setRequestStatus(RequestStatus.UNRESOLVED)
+                .setActivityId(1).setComment("Fuck you!");
+        userRequestService.save(request);
+
     }
 
     @Override

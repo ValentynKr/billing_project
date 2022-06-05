@@ -61,8 +61,12 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
-            preparedStatement.setInt(i++, userRequest.getUserRequestId());
-            i = insertDataFromEntity(userRequest, preparedStatement, i);
+
+            preparedStatement.setInt(i++, userRequest.getUserId());
+            preparedStatement.setString(i++, userRequest.getRequestType().toString());
+            preparedStatement.setString(i++, userRequest.getRequestStatus().toString());
+            preparedStatement.setInt(i++, userRequest.getActivityId());
+            preparedStatement.setString(i++, userRequest.getNewActivityName());
             preparedStatement.setString(i, userRequest.getComment());
 
             if (preparedStatement.executeUpdate() > 0) {

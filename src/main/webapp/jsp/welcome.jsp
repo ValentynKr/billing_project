@@ -31,6 +31,9 @@
         <a class="logout" href="${pageContext.request.contextPath}/logout">
             <button class="btn btn-default" type="button"><fmt:message key="button.logout"/></button>
         </a>
+        <a class="logout" href="createRequestFromUser.jsp">
+            <button class="btn btn-default" type="button"><fmt:message key="button.createRequest"/></button>
+        </a>
         <p class="h1"><fmt:message key="placeholder.cabinet"/></p>
     </div>
 </div>
@@ -85,26 +88,6 @@
             </c:forEach>
             </tbody>
         </table>
-        <div class="form-group">
-            <label for="typeOfRequest">Request type for admin</label>
-            <select class="form-control" id="typeOfRequest">
-                <option>Create</option>
-                <option>Delete</option>
-                <option>Edit</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="activityNameForRequest">Activity name</label>
-            <select class="form-control" id="activityNameForRequest">
-                <option>Activity1</option>
-                <option>Activity2</option>
-                <option>Activity3</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="commentForAdmin">Comment</label>
-            <input type="text" class="form-control" id="commentForAdmin" placeholder="<fmt:message key="placeholder.comment"/>">
-        </div>
     </div>
 </div>
 
