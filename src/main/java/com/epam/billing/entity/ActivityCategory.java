@@ -5,6 +5,14 @@ public class ActivityCategory {
     private int categoryId;
     private String categoryName;
 
+    @Override
+    public String toString() {
+        return "ActivityCategory{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
+
     public int getCategoryId() {
         return categoryId;
     }

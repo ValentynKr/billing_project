@@ -4,11 +4,24 @@ public class UserRequest {
 
     private int userRequestId;
     private int userId;
-    private String requestType;
-    private String requestStatus; // <----- here must be enum
+    private RequestType requestType;
+    private RequestStatus requestStatus;
     private int activityId;
     private String newActivityName;
     private String comment;
+
+    @Override
+    public String toString() {
+        return "UserRequest{" +
+                "userRequestId=" + userRequestId +
+                ", userId=" + userId +
+                ", requestType='" + requestType + '\'' +
+                ", requestStatus='" + requestStatus + '\'' +
+                ", activityId=" + activityId +
+                ", newActivityName='" + newActivityName + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 
     public int getUserRequestId() {
         return userRequestId;
@@ -28,20 +41,20 @@ public class UserRequest {
         return this;
     }
 
-    public String getRequestType() {
+    public RequestType getRequestType() {
         return requestType;
     }
 
-    public UserRequest setRequestType(String requestType) {
+    public UserRequest setRequestType(RequestType requestType) {
         this.requestType = requestType;
         return this;
     }
 
-    public String getRequestStatus() {
+    public RequestStatus getRequestStatus() {
         return requestStatus;
     }
 
-    public UserRequest setRequestStatus(String requestStatus) {
+    public UserRequest setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
         return this;
     }

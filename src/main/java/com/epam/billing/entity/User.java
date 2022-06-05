@@ -8,21 +8,15 @@ public class User {
     private String email;
     private String password;
 
-
     @Override
     public String toString() {
-        String status;
-        if (admin) {
-            status = " Администратор";
-        } else {
-            status = " Пользователь";
-        }
-
-        return userId + ". " +
-                name + " " +
-                status + " " +
-                email + " " +
-                password;
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", admin=" + admin +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
     public int getUserId() {
@@ -70,5 +64,4 @@ public class User {
         this.email = email;
         return this;
     }
-
 }

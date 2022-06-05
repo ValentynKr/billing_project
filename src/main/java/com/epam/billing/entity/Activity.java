@@ -6,6 +6,15 @@ public class Activity {
     private String name;
     private int categoryOfActivityId;
 
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "activityId=" + activityId +
+                ", name='" + name + '\'' +
+                ", categoryOfActivityId=" + categoryOfActivityId +
+                '}';
+    }
+
     public int getActivityId() {
         return activityId;
     }

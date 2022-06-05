@@ -40,39 +40,17 @@ public class AddingUserActivityDurationServlet extends HttpServlet {
         String userActivityName = req.getParameter("userActivityName");
 
         if (ValidationUtil.isActivityDurationValid(duration)) {
-            String[] strings = duration.split(",");
-            StringBuilder stringBuilder = new StringBuilder();
-            if (strings.length > 0) {
-                for (int i = 0; i < strings.length; i++) {
-                    stringBuilder.append(strings[i]);
-                    if (i != strings.length - 1) {
-                        stringBuilder.append('.');
-                    }
-                }
-                duration = stringBuilder.toString();
-            }
+            duration = duration.replace(",", ".");
             float durationFloat = Float.parseFloat(duration);
             Activity activity = activityService.getByName(userActivityName);
-            List<UserActivity> userActivities = userActivityService.getByActivityId(activity.getActivityId());
-            UserActivity newUserActivity = new UserActivity();
-            for (UserActivity userActivity : userActivities) {
-                if (userActivity.getUserId() == user.getUserId()) {
-                    newUserActivity = userActivity;
-                }
-            }
-            durationFloat += newUserActivity.getDurationOfActivity();
-            newUserActivity.setDurationOfActivity(durationFloat);
-            userActivityService.update(newUserActivity);
-
-            req.getSession().removeAttribute("userActivities");
-            UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
-            req.getSession().setAttribute("userActivities", userActivityUserNameIdDurationRecording
-                    .getUserActivityUserNameIdDurationDTO(user.getUserId()));
-
+            UserActivity userActivity = userActivityService.getByActivityIdAndUserId(activity.getActivityId(), user.getUserId());
+            userActivity.setDurationOfActivity(durationFloat + userActivity.getDurationOfActivity());
+            userActivityService.update(userActivity);
+            req.getSession().setAttribute("userActivities", userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId()));
         } else {
-            req.getSession().removeAttribute("Alert");
-            req.getSession().setAttribute("Alert", "Invalid value in field 'Duration'");
+            String alertMessage = String.format("Invalid value '%s' in field 'Duration'", duration);
+            req.getSession().setAttribute("Alert", alertMessage);
         }
-        req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
+        resp.sendRedirect("/billing_project/jsp/welcome.jsp");
     }
 }

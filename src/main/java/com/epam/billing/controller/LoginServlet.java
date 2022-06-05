@@ -28,6 +28,11 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doGet(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String login = req.getParameter("login");
@@ -46,12 +51,9 @@ public class LoginServlet extends HttpServlet {
                     if (user.isAdmin()) {
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
-                        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording =
-                                new UserActivityUserNameIdDurationRecording();
                         req.getSession().setAttribute("userActivities",
-                                userActivityUserNameIdDurationRecording
-                                        .getUserActivityUserNameIdDurationDTO(user.getUserId()));
-                        req.getRequestDispatcher("/jsp/welcome.jsp").forward(req, resp);
+                                userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId()));
+                        resp.sendRedirect("/billing_project/jsp/welcome.jsp");
                     }
                 } else {
                     req.getSession().setAttribute("Alert", "Wrong password!");

@@ -1,5 +1,7 @@
 package com.epam.billing.repository;
 
+import com.epam.billing.entity.RequestStatus;
+import com.epam.billing.entity.RequestType;
 import com.epam.billing.entity.UserRequest;
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,8 +44,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             while (resultSet.next()) {
                 userRequest.setUserRequestId(resultSet.getInt(1));
                 userRequest.setUserId(resultSet.getInt(2));
-                userRequest.setRequestType(resultSet.getString(3));
-                userRequest.setRequestStatus(resultSet.getString(4));
+                userRequest.setRequestType(RequestType.valueOf(resultSet.getString(3)));
+                userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString(4)));
                 userRequest.setActivityId(resultSet.getInt(5));
                 userRequest.setNewActivityName(resultSet.getString(6));
                 userRequest.setComment(resultSet.getString(7));
@@ -121,8 +123,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         UserRequest userRequest = new UserRequest();
         userRequest.setUserRequestId(resultSet.getInt("id"));
         userRequest.setUserId(resultSet.getInt("user_id"));
-        userRequest.setRequestType(resultSet.getString("request_type"));
-        userRequest.setRequestStatus(resultSet.getString("request_status"));
+        userRequest.setRequestType(RequestType.valueOf(resultSet.getString("request_type")));
+        userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString("request_status")));
         userRequest.setActivityId(resultSet.getInt("activity_id"));
         userRequest.setNewActivityName(resultSet.getString("new_activity_name"));
         userRequest.setComment(resultSet.getString("comment"));
@@ -131,8 +133,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
 
     private int insertDataFromEntity(UserRequest userRequest, PreparedStatement preparedStatement, int i) throws SQLException {
         preparedStatement.setInt(i++, userRequest.getUserId());
-        preparedStatement.setString(i++, userRequest.getRequestType());
-        preparedStatement.setString(i++, userRequest.getRequestStatus());
+        preparedStatement.setString(i++, userRequest.getRequestType().toString());
+        preparedStatement.setString(i++, userRequest.getRequestStatus().toString());
         preparedStatement.setInt(i++, userRequest.getActivityId());
         preparedStatement.setString(i++, userRequest.getNewActivityName());
         return i;

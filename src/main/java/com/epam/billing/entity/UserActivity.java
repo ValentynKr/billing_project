@@ -7,12 +7,14 @@ public class UserActivity {
     private int userId;
     private float durationOfActivity;
 
+    @Override
     public String toString() {
-
-        return userActivityId + ". " +
-                activityId + " " +
-                userId + " " +
-                durationOfActivity;
+        return "UserActivity{" +
+                "userActivityId=" + userActivityId +
+                ", activityId=" + activityId +
+                ", userId=" + userId +
+                ", durationOfActivity=" + durationOfActivity +
+                '}';
     }
 
     public int getUserActivityId() {

@@ -1,5 +1,6 @@
 package com.epam.billing.service;
 
+import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
 import com.epam.billing.entity.UserActivity;
 import com.epam.billing.repository.UserActivityRepository;
 
@@ -43,5 +44,12 @@ public class UserActivityService {
 
     public List<UserActivity> getByActivityId(long activityId) {
         return userActivityRepository.getUserActivityByActivityId(activityId);
+    }
+    public UserActivity getByActivityIdAndUserId(int activityId, int userId) {
+        return userActivityRepository.getByActivityIdAndUserId(activityId, userId);
+    }
+
+    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int activityId) {
+        return userActivityRepository.getUserActivityUserNameIdDurationDTO(activityId);
     }
 }

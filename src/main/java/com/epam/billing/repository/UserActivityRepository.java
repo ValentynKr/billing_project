@@ -1,5 +1,6 @@
 package com.epam.billing.repository;
 
+import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
 import com.epam.billing.entity.UserActivity;
 
 import java.sql.*;
@@ -12,12 +13,24 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_activities WHERE id = ?";
     private static final String SELECT_BY_USER_ID = "SELECT * FROM user_activities WHERE user_id = ?";
     private static final String SELECT_BY_ACTIVITY_ID = "SELECT * FROM user_activities WHERE activity_id = ?";
+    private static final String SELECT_BY_ACTIVITY_ID_AND_USER_ID = "SELECT * FROM user_activities WHERE activity_id = ? AND user_id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_activities WHERE EXISTS (SELECT * " +
             "FROM user_activities WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_activities VALUES (DEFAULT, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_activities WHERE id = ?";
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
             "WHERE id=?";
+
+    private static final String JOIN_USER_NAME = "SELECT \n" +
+                    "activity_category.name, activity.name, users.name , user_activities.duration \n" +
+                    "FROM  user_activities\n" +
+                    "inner JOIN activity\n" +
+                    "on user_activities.activity_id = activity.id\n" +
+                    "inner join users\n" +
+                    "on user_activities.user_id = users.id\n" +
+                    "inner join activity_category\n" +
+                    "on activity.category_id = activity_category.id\n" +
+                    "where user_id=?";
 
 
     @Override
@@ -149,6 +162,43 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             throwables.printStackTrace();
         }
         return userActivityList;
+    }
+
+    public UserActivity getByActivityIdAndUserId(int activityId, int userId) {
+       UserActivity userActivity = new UserActivity();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ACTIVITY_ID_AND_USER_ID)) {
+            preparedStatement.setInt(1, activityId);
+            preparedStatement.setInt(2, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userActivity = createEntity(resultSet);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivity;
+    }
+
+    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int userId) {
+        List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
+        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
+                userActivityUserNameIdDurationRecording.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecording.setUserName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecording.setActivityDuration(resultSet.getFloat(4));
+                userActivityUserNameIdDurationRecordings.add(userActivityUserNameIdDurationRecording);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivityUserNameIdDurationRecordings;
     }
 
     private UserActivity createEntity(ResultSet resultSet) throws SQLException {
