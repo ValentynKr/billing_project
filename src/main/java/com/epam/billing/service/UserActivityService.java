@@ -49,7 +49,7 @@ public class UserActivityService {
         return userActivityRepository.getByActivityIdAndUserId(activityId, userId);
     }
 
-    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int activityId) {
-        return userActivityRepository.getUserActivityUserNameIdDurationDTO(activityId);
+    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int activityId, int languageId) {
+        return userActivityRepository.getUserActivityUserNameIdDurationDTO(activityId, languageId);
     }
 }

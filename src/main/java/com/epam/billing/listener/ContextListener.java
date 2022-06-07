@@ -19,6 +19,7 @@ public class ContextListener implements ServletContextListener {
         initActivityCategoryService(context);
         initUserActivityService(context);
         initUserRequestService(context);
+        initLanguageService(context);
     }
 
     private void initActivityCategoryService(ServletContext context) {
@@ -50,6 +51,11 @@ public class ContextListener implements ServletContextListener {
         context.setAttribute("userService", userService);
     }
 
+    private void initLanguageService(ServletContext context) {
+        LanguageRepository languageRepository = new LanguageRepository();
+        LanguageService languageService = new LanguageService(languageRepository);
+        context.setAttribute("languageService", languageService);
+    }
 
 
     @Override

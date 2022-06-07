@@ -12,7 +12,7 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     private static final String SELECT_ALL = "SELECT * FROM user_request";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
-    private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_request WHERE id = ?";
     private static final String UPDATE = "UPDATE user_request SET user_id=?, request_type=?, request_status=?, " +
             "activity_id=?, new_activity_name=?, comment=?" +

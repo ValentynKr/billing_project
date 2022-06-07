@@ -21,16 +21,18 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
             "WHERE id=?";
 
-    private static final String JOIN_USER_NAME = "SELECT \n" +
-                    "activity_category.name, activity.name, users.name , user_activities.duration \n" +
-                    "FROM  user_activities\n" +
-                    "inner JOIN activity\n" +
-                    "on user_activities.activity_id = activity.id\n" +
-                    "inner join users\n" +
-                    "on user_activities.user_id = users.id\n" +
-                    "inner join activity_category\n" +
-                    "on activity.category_id = activity_category.id\n" +
-                    "where user_id=?";
+    private static final String JOIN_USER_NAME = "SELECT\n" +
+            "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
+            "FROM  user_activities\n" +
+            "inner JOIN activity\n" +
+            "on user_activities.activity_id = activity.id\n" +
+            "inner join users\n" +
+            "on user_activities.user_id = users.id\n" +
+            "inner join activity_category\n" +
+            "on activity.category_id = activity_category.id\n" +
+            "inner join activity_category_description\n" +
+            "on activity_category.id = activity_category_description.category_id\n" +
+            "where user_id=? and language_id =?";
 
 
     @Override
@@ -180,12 +182,13 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return userActivity;
     }
 
-    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int userId) {
+    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int userId, int languageId) {
         List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
         UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
             preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();

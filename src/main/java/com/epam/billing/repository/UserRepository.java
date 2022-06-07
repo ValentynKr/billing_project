@@ -2,6 +2,7 @@ package com.epam.billing.repository;
 
 import com.epam.billing.entity.User;
 import com.epam.billing.exeption.DBException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,20 +37,17 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     public Optional<User> getByEmail(String email) {
-        User user = null;
+        User user = new User();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.isBeforeFirst()) {
-                user = new User();
-                while (resultSet.next()) {
-                    user.setUserId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setAdmin(resultSet.getBoolean(3));
-                    user.setEmail(resultSet.getString(4));
-                    user.setPassword(resultSet.getString(5));
-                }
+            while (resultSet.next()) {
+                user.setUserId(resultSet.getInt(1));
+                user.setName(resultSet.getString(2));
+                user.setAdmin(resultSet.getBoolean(3));
+                user.setEmail(resultSet.getString(4));
+                user.setPassword(resultSet.getString(5));
             }
         } catch (SQLException throwables) {
             throw new DBException();

@@ -3,14 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language"
-       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.session.getValue(language)}"
        scope="session"/>
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="resources"/>
 <!DOCTYPE html>
 <html>
 <head>
-    <title><fmt:message key="create.request"/></title>
+    <title><fmt:message key="button.createRequest"/></title>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/signin.css" rel="stylesheet">
 
@@ -37,6 +37,7 @@
         <p class="h1"><fmt:message key="title.requestPage"/></p>
     </div>
 </div>
+<hr>
 <div class="container">
     <div class="col-md-10">
         <div class="form-group">

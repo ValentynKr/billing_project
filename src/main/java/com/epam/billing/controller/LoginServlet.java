@@ -1,12 +1,8 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.entity.RequestStatus;
-import com.epam.billing.entity.RequestType;
+import com.epam.billing.entity.Language;
 import com.epam.billing.entity.User;
-import com.epam.billing.entity.UserRequest;
 import com.epam.billing.exeption.AppException;
-import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
-import com.epam.billing.repository.UserRequestRepository;
 import com.epam.billing.service.*;
 import com.epam.billing.utils.PasswordHashingUtil;
 
@@ -24,23 +20,20 @@ public class LoginServlet extends HttpServlet {
 
     private UserService userService;
     private UserActivityService userActivityService;
-    private UserRequestService userRequestService;
+    private LanguageService languageService;
 
     @Override
     public void init() {
         userService = (UserService) getServletContext().getAttribute("userService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
-        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
+        languageService = (LanguageService) getServletContext().getAttribute("languageService");
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        UserRequest request = new UserRequest();
-        request.setUserId(1).setRequestType(RequestType.CREATE).setRequestStatus(RequestStatus.UNRESOLVED)
-                .setActivityId(1).setComment("Fuck you!");
-        userRequestService.save(request);
-
+        System.out.println(req.getSession().getAttribute("language").toString());
     }
 
     @Override
@@ -49,6 +42,8 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         Optional<User> userOptional = userService.getByEmail(login);
+        Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
+
         if (!userOptional.isPresent()) {
             req.getSession().setAttribute("Alert", "User with such email is not registered. Please, register!");
             req.getRequestDispatcher("login.jsp").forward(req, resp);
@@ -63,7 +58,7 @@ public class LoginServlet extends HttpServlet {
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
                         req.getSession().setAttribute("userActivities",
-                                userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId()));
+                                userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId(), language.getId()));
                         resp.sendRedirect("/billing_project/jsp/welcome.jsp");
                     }
                 } else {
