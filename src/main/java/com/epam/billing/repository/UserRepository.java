@@ -16,8 +16,7 @@ public class UserRepository extends AbstractRepository<User> {
     private static final String EXIST_BY_ID = "SELECT * FROM users WHERE EXISTS(SELECT * FROM users WHERE id = ?)";
     private static final String INSERT = "INSERT INTO users VALUES (DEFAULT, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM users WHERE id = ?";
-    private static final String UPDATE = "UPDATE users SET name=?, admin=?, email=?, pass=? " +
-            "WHERE id=?";
+    private static final String UPDATE = "UPDATE users SET name=?, status=?, email=?, pass=? WHERE id=?";
 
 
     @Override
@@ -42,13 +41,15 @@ public class UserRepository extends AbstractRepository<User> {
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_EMAIL)) {
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                user.setUserId(resultSet.getInt(1));
-                user.setName(resultSet.getString(2));
-                user.setAdmin(resultSet.getBoolean(3));
-                user.setEmail(resultSet.getString(4));
-                user.setPassword(resultSet.getString(5));
-            }
+            if (resultSet.isBeforeFirst()) {
+                while (resultSet.next()) {
+                    user.setUserId(resultSet.getInt(1));
+                    user.setName(resultSet.getString(2));
+                    user.setAdmin(resultSet.getBoolean(3));
+                    user.setEmail(resultSet.getString(4));
+                    user.setPassword(resultSet.getString(5));
+                }
+            } else {user = null;}
         } catch (SQLException throwables) {
             throw new DBException();
         }

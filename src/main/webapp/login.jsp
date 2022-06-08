@@ -11,7 +11,7 @@
 <html>
 <head>
 
-    <title><fmt:message key="login.title" /></title>
+    <title><fmt:message key="login.title"/></title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/signin.css" rel="stylesheet">
 
@@ -22,21 +22,16 @@
 
 <body>
 
-<div class="btn-group pull-left">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-        <fmt:message key="login.lang"/><span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-        <li><a href="login.jsp?language=en">English</a></li>
-        <li><a href="login.jsp?language=ru">Русский</a></li>
-    </ul>
-</div>
+<a href="login.jsp?language=en" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">English</a>
+<a href="login.jsp?language=ru" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Русский</a>
 
 <div class="container-fluid">
     <form class="form-signin" action="<c:url value="/login"/>" method="post">
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="login.label"/></h2>
-        <input type="text" class="form-control" name="login" placeholder="<fmt:message key="placeholder.email"/>" required autofocus/>
-        <input type="password" class="form-control" name="password" placeholder="<fmt:message key="placeholder.password"/>" required/>
+        <input type="text" class="form-control" name="login" placeholder="<fmt:message key="placeholder.email"/>"
+               required autofocus/>
+        <input type="password" class="form-control" name="password"
+               placeholder="<fmt:message key="placeholder.password"/>" required/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="login.button"/></button>
     </form>
 
@@ -52,10 +47,9 @@
 </div>
 
 
-
 <div class="alert alert-light fade in text-center" role="alert">
     <fmt:message key="notification.ifNotRegistered"/> <a
-        href="${pageContext.request.contextPath}/jsp/registration.jsp">here</a>
+        href="${pageContext.request.contextPath}/jsp/registration.jsp"><fmt:message key="label.here"/></a>
 </div>
 
 <script src="/billing_project/js/jquery.min.js"></script>

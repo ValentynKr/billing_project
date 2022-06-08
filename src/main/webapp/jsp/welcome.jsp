@@ -18,22 +18,14 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 </head>
 <body>
+
+<a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.logout"/></a>
+<a href="createRequestFromUser.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.createRequest"/></a>
+<a href="changeUserInfo.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="title.changeUserInfo"/></a>
+
+
 <div class="container">
     <div class="btn-group pull-left">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <fmt:message key="login.lang"/><span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="login.jsp?language=en">English</a></li>
-            <li><a href="login.jsp?language=ru">Русский</a></li>
-        </ul>
-
-        <a class="logout" href="${pageContext.request.contextPath}/logout">
-            <button class="btn btn-default" type="button"><fmt:message key="button.logout"/></button>
-        </a>
-        <a class="logout" href="createRequestFromUser.jsp">
-            <button class="btn btn-default" type="button"><fmt:message key="button.createRequest"/></button>
-        </a>
         <p class="h1"><fmt:message key="placeholder.cabinet"/></p>
     </div>
 </div>
@@ -56,6 +48,7 @@
             <div class="col-sm-2"><fmt:message key="placeholder.userstatus"/></div>
         </c:if>
     </div>
+
 </div>
 <hr>
 <div class="container">
@@ -78,7 +71,7 @@
                         <form class="form-group" action="${pageContext.request.contextPath}/addUserActivityDuration"
                               method="post">
                             <input type="text" class="form" name="userActivityNewDuration"
-                                   placeholder="<fmt:message key="placeholder.userActivityDuration"/>">
+                                   placeholder="<fmt:message key="userActivity.durationOfActivity"/>">
                             <input type="hidden" name="userActivityName" value="${userActivity.activityName}">
                             <button class="btn btn-xs btn-default" type="submit"><fmt:message
                                     key="button.submit"/></button>

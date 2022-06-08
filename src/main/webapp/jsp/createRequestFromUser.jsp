@@ -11,57 +11,61 @@
 <html>
 <head>
     <title><fmt:message key="button.createRequest"/></title>
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/signin.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/signin.css" rel="stylesheet">
 
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 </head>
 <body>
+
+<a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary btn-lg active" role="button"
+   aria-pressed="true"><fmt:message key="button.logout"/></a>
+<a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
+        key="button.back"/></a>
+
 <div class="container">
     <div class="btn-group pull-left">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <fmt:message key="login.lang"/><span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-            <li><a href="login.jsp?language=en">English</a></li>
-            <li><a href="login.jsp?language=ru">Русский</a></li>
-        </ul>
-
-        <a class="logout" href="${pageContext.request.contextPath}/logout">
-            <button class="btn btn-default" type="button"><fmt:message key="button.logout"/></button>
-        </a>
-        <a class="logout" href="welcome.jsp">
-            <button class="btn btn-default" type="button"><fmt:message key="button.back"/></button>
-        </a>
         <p class="h1"><fmt:message key="title.requestPage"/></p>
     </div>
 </div>
 <hr>
 <div class="container">
-    <div class="col-md-10">
-        <div class="form-group">
-            <label for="typeOfRequest">Request type for admin</label>
-            <select class="form-control" id="typeOfRequest">
-                <option>Create</option>
-                <option>Delete</option>
-                <option>Edit</option>
+    <div class="col-md-7">
+        <form class="orm-control" action="${pageContext.request.contextPath}/userRequestServlet" method="post">
+            <label for="typeOfRequest"><fmt:message key="label.requestType"/></label>
+            <select class="form-control" name="typeOfRequest" id="typeOfRequest">
+                <option value="CREATE">CREATE</option>
+                <option value="DELETE">DELETE</option>
+                <option value="EDIT">EDIT</option>
             </select>
-        </div>
-        <div class="form-group">
-            <label for="activityNameForRequest">Activity name</label>
-            <select class="form-control" id="activityNameForRequest">
-                <option>Activity1</option>
-                <option>Activity2</option>
-                <option>Activity3</option>
+            <label for="activityNameForRequest"><fmt:message key="userActivity.activityName"/></label>
+            <select class="form-control" name="activityNameForRequest" id="activityNameForRequest">
+                <c:forEach var="userActivity" items="${sessionScope.userActivities}">
+                    <option>${userActivity.activityName}</option>
+                </c:forEach>
             </select>
-        </div>
-        <div class="form-group">
-            <label for="commentForAdmin">Comment</label>
-            <input type="text" class="form-control" id="commentForAdmin"
+            <label for="commentForAdmin"><fmt:message key="label.newActivityName"/></label>
+            <input type="text" class="form-control" name="newActivityName" id="newActivityName"
+                   placeholder="New activity name">
+            <label for="commentForAdmin"><fmt:message key="label.comment"/></label>
+            <input type="text" class="form-control" name="commentForAdmin" id="commentForAdmin"
                    placeholder="<fmt:message key="placeholder.comment"/>">
-        </div>
+            <input type="hidden" name="userId" value="${sessionScope.user.userId}">
+            <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
+        </form>
+        <c:if test="${not empty sessionScope.Alert}">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="alert alert-info"><p class="text-center"><strong>${sessionScope.Alert}</strong></p></div>
+                    <c:remove var="Alert"/>
+                </div>
+            </div>
+        </c:if>
     </div>
+
 </div>
+
+
 </body>
 </html>
