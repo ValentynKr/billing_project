@@ -34,6 +34,19 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             "on activity_category.id = activity_category_description.category_id\n" +
             "where user_id=? and language_id =?";
 
+    private static final String JOIN_ALL = "SELECT\n" +
+            "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
+            "FROM  user_activities\n" +
+            "inner JOIN activity\n" +
+            "on user_activities.activity_id = activity.id\n" +
+            "inner join users\n" +
+            "on user_activities.user_id = users.id\n" +
+            "inner join activity_category\n" +
+            "on activity.category_id = activity_category.id\n" +
+            "inner join activity_category_description\n" +
+            "on activity_category.id = activity_category_description.category_id\n" +
+            "where language_id =? order by users.name";
+
 
     @Override
     public List<UserActivity> getAll() {
@@ -189,6 +202,27 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
              PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, languageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
+                userActivityUserNameIdDurationRecording.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecording.setUserName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecording.setActivityDuration(resultSet.getFloat(4));
+                userActivityUserNameIdDurationRecordings.add(userActivityUserNameIdDurationRecording);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivityUserNameIdDurationRecordings;
+    }
+
+    public List<UserActivityUserNameIdDurationRecording> getAllUserActivitiesDurationDTO(int languageId) {
+        List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
+        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(JOIN_ALL)) {
+            preparedStatement.setInt(1, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();

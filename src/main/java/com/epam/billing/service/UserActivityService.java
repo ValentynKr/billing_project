@@ -52,4 +52,8 @@ public class UserActivityService {
     public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int activityId, int languageId) {
         return userActivityRepository.getUserActivityUserNameIdDurationDTO(activityId, languageId);
     }
+    public List<UserActivityUserNameIdDurationRecording> getAllUserActivitiesDurationDTO(int languageId) {
+        return userActivityRepository.getAllUserActivitiesDurationDTO(languageId);
+    }
+
 }

@@ -15,25 +15,26 @@ public class PasswordHashingUtil {            //toDo Class need to be refactored
     private static final int SALT_LENGTH = 16;
     private static final int DESIRED_KEY_LINE = 256;
 
-    public static String getSaltedHash(String password) throws AppException {  //toDo DB 'password' attribute should be varchar more 30 symbols
+    public static String getSaltedHash(String password) {  //toDo DB 'password' attribute should be varchar more 30 symbols
         byte[] salt = null;
         try {
             salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(SALT_LENGTH);
         } catch (NoSuchAlgorithmException e) {
-            throw new AppException("ERR_CANNOT_GET_SALT", e);
+            e.printStackTrace();
         }
         return Base64.encodeBase64String(salt) + "$" + hash(password, salt);
     }
 
-    private static String hash(String password, byte[] salt) throws AppException {
+    private static String hash(String password, byte[] salt) {
         try {
             SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             SecretKey key = f
                     .generateSecret(new PBEKeySpec(password.toCharArray(), salt, ITERATIONS, DESIRED_KEY_LINE));
             return Base64.encodeBase64String(key.getEncoded());
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AppException("ERR_CANNOT_GET_HASH", e);
+            e.printStackTrace();
         }
+        return null;
     }
 
     public static boolean check(String password, String stored) throws AppException {

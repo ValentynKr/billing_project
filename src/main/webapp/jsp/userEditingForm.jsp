@@ -18,14 +18,10 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 </head>
 <body>
-<c:if test="${sessionScope.user.admin}">
-    <a href="${pageContext.request.contextPath}/jsp/welcome-admin.jsp" class="btn btn-secondary btn-lg active"
-       role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
-</c:if>
-<c:if test="${!sessionScope.user.admin}">
-    <a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active"
-       role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
-</c:if>
+
+<a href="${pageContext.request.contextPath}/jsp/editOrDeleteUser.jsp" class="btn btn-secondary btn-lg active"
+   role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
+
 
 <div class="container">
     <div class="btn-group pull-left">
@@ -35,11 +31,16 @@
 <hr>
 
 <div class="container-fluid">
-    <form class="form-signin" action="<c:url value="/changeUserInfo"/>" method="post">
-        <c:set var="localUser" value="${sessionScope.user}"/>
+    <form class="form-signin" action="<c:url value="/editUserAdminForm"/>" method="post">
+        <c:set var="localUser" value="${sessionScope.userToEdit}"/>
+        <c:set var="isAdmin" value="0" scope="page"/>
+        <c:if test="${localUser.admin}">
+            <c:set var="isAdmin" value="1"/>
+        </c:if>
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
         <input type="text" class="form-control" name="name" value="${localUser.name}"/>
         <input type="text" class="form-control" name="email" value="${localUser.email}"/>
+        <input type="text" class="form-control" name="isAdmin" value="${isAdmin}"/>
         <input type="password" class="form-control" name="password"
                placeholder="<fmt:message key="placeholder.newPassword"/>"/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>

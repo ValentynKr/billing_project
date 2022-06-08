@@ -38,12 +38,7 @@ public class RegistrationServlet extends HttpServlet {
                 } else {
                     if (ValidationUtil.isPasswordValid(req.getParameter("password"))) {
                         String name = req.getParameter("name");
-                        User user = null;
-                        try {
-                            user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(PasswordHashingUtil.getSaltedHash(password));
-                        } catch (AppException e) {
-                            e.printStackTrace(); //toDo need to operate the exception
-                        }
+                        User user = new User().setName(name).setEmail(email).setAdmin(false).setPassword(PasswordHashingUtil.getSaltedHash(password));
                         userService.save(user);
                         req.getSession().setAttribute("Alert", "Registration was accomplished. Thank you!");
                     } else {

@@ -55,6 +55,9 @@ public class LoginServlet extends HttpServlet {
                     HttpSession session = req.getSession();
                     session.setAttribute("user", user);
                     if (user.isAdmin()) {
+                        req.getSession().setAttribute("userActivities",
+                                userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
+                        req.getSession().setAttribute("listOfAllUsers", userService.getAll());
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
                         req.getSession().setAttribute("userActivities",
