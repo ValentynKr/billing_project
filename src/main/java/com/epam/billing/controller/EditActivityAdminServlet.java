@@ -2,9 +2,6 @@ package com.epam.billing.controller;
 
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.ActivityCategory;
-import com.epam.billing.utils.PasswordHashingUtil;
-import com.epam.billing.utils.ValidationUtil;
-import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,15 +13,11 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/editActivityAdmin"})
 public class EditActivityAdminServlet extends HttpServlet {
-    private UserService userService;
     private ActivityService activityService;
-    private ActivityCategoryService activityCategoryService;
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
-        userService = (UserService) getServletContext().getAttribute("userService");
-        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
     }
 
     @Override

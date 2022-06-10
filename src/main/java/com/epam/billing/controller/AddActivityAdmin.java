@@ -4,9 +4,6 @@ package com.epam.billing.controller;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.entity.Language;
-import com.epam.billing.utils.PasswordHashingUtil;
-import com.epam.billing.utils.ValidationUtil;
-import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(urlPatterns = {"/addActivityAdmin"})
 public class AddActivityAdmin extends HttpServlet {

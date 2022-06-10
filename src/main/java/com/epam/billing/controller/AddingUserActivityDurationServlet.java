@@ -16,20 +16,14 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/addUserActivityDuration"})
 public class AddingUserActivityDurationServlet extends HttpServlet {
-    private UserService userService;
     private ActivityService activityService;
-    private ActivityCategoryService activityCategoryService;
     private UserActivityService userActivityService;
-    private UserRequestService userRequestService;
     private LanguageService languageService;
 
     @Override
     public void init() {
-        userService = (UserService) getServletContext().getAttribute("userService");
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
-        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
-        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
     }
 

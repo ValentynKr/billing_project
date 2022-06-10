@@ -5,7 +5,6 @@ import com.epam.billing.entity.RequestStatus;
 import com.epam.billing.entity.RequestType;
 import com.epam.billing.entity.UserRequest;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

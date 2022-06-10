@@ -2,7 +2,6 @@ package com.epam.billing.controller;
 
 import com.epam.billing.entity.*;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +14,6 @@ public class EditActivityAdminFormServlet extends HttpServlet {
     private static final String ACTIVITY_CATEGORY_IS_CLOSED_MESSAGE = "You can not change activity from closed category. Please, make category OPENED and try again";
     private static final String ADDING_TO_CLOSED_CATEGORY_IS_FORBIDDEN_MESSAGE = "You can not change activity category to closed activity category. Please, change targeted category to OPENED and try again";
     private static final String STATUS_CLOSED = "CLOSED";
-    private UserService userService;
     private UserActivityService userActivityService;
     private LanguageService languageService;
     private ActivityCategoryService activityCategoryService;
@@ -23,7 +21,6 @@ public class EditActivityAdminFormServlet extends HttpServlet {
 
     @Override
     public void init() {
-        userService = (UserService) getServletContext().getAttribute("userService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");

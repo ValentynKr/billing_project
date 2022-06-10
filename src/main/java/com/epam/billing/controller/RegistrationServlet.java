@@ -1,11 +1,9 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.exeption.AppException;
 import com.epam.billing.utils.PasswordHashingUtil;
 import com.epam.billing.utils.ValidationUtil;
 import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

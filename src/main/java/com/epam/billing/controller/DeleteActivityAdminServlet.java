@@ -2,7 +2,6 @@ package com.epam.billing.controller;
 
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.Language;
-import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
