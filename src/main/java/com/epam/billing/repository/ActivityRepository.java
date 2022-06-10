@@ -1,15 +1,25 @@
 package com.epam.billing.repository;
 
+import com.epam.billing.DTO.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class ActivityRepository extends AbstractRepository<Activity>{
+public class ActivityRepository extends AbstractRepository<Activity> {
 
     private static final String SELECT_ALL = "SELECT * FROM activity";
+    private static final String SELECT_ALL_WITH_LOCALIZED_CATEGORY = "SELECT \n" +
+            "activity.id, activity_category_description.name, activity.name \n" +
+            "from activity\n" +
+            "inner join activity_category_description\n" +
+            "on  activity.category_id = activity_category_description.category_id\n" +
+            "where language_id=?;";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity WHERE id = ?";
     private static final String SELECT_ALL_WHERE_NAME = "SELECT * FROM activity WHERE name = ?";
+    private static final String SELECT_ALL_WHERE_NAME_IN_CATEGORY = "SELECT * FROM activity WHERE name =? AND category_id =?;";
     private static final String EXIST_BY_ID = "SELECT * FROM activity WHERE EXISTS(SELECT * FROM activity WHERE id = ?)";
     private static final String INSERT = "INSERT INTO activity VALUES (DEFAULT, ?, ?)";
     private static final String DELETE = "DELETE FROM activity WHERE id = ?";
@@ -31,6 +41,25 @@ public class ActivityRepository extends AbstractRepository<Activity>{
         return activityList;
     }
 
+    public List<ActivityIdActivityCategoryLocalizedNameActivityNameDTO> getAllWithCategoryLocalizedNames(int languageId) {
+        List<ActivityIdActivityCategoryLocalizedNameActivityNameDTO> activityIdActivityCategoryLocalizedNameActivityNameDTOS = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WITH_LOCALIZED_CATEGORY)) {
+            preparedStatement.setLong(1, languageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ActivityIdActivityCategoryLocalizedNameActivityNameDTO activityIdActivityCategoryLocalizedNameActivityNameDTO = new ActivityIdActivityCategoryLocalizedNameActivityNameDTO();
+                activityIdActivityCategoryLocalizedNameActivityNameDTO.setActivityId(resultSet.getInt(1));
+                activityIdActivityCategoryLocalizedNameActivityNameDTO.setActivityCategoryLocalizedName(resultSet.getString(2));
+                activityIdActivityCategoryLocalizedNameActivityNameDTO.setActivityName(resultSet.getString(3));
+                activityIdActivityCategoryLocalizedNameActivityNameDTOS.add(activityIdActivityCategoryLocalizedNameActivityNameDTO);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activityIdActivityCategoryLocalizedNameActivityNameDTOS;
+    }
+
     @Override
     public Activity getById(long id) {
         Activity activity = new Activity();
@@ -49,7 +78,7 @@ public class ActivityRepository extends AbstractRepository<Activity>{
         return activity;
     }
 
-    public Activity getByName(String name) {
+    public Activity getByNameNotSafe(String name) {
         Activity activity = new Activity();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {
@@ -66,13 +95,51 @@ public class ActivityRepository extends AbstractRepository<Activity>{
         return activity;
     }
 
+    public Optional<Activity> getByNameSafe(String name) { //toDo return optional
+        Activity activity = new Activity();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {
+            preparedStatement.setString(1, name);
+            activity = getActivity(activity, preparedStatement);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.ofNullable(activity);
+    }
+
+    public Optional<Activity> getByNameInOneCategory(String name, int categoryId) {
+        Activity activity = new Activity();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME_IN_CATEGORY)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, categoryId);
+            activity = getActivity(activity, preparedStatement);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.ofNullable(activity);
+    }
+
+    private Activity getActivity(Activity activity, PreparedStatement preparedStatement) throws SQLException {
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.isBeforeFirst()) {
+            while (resultSet.next()) {
+                activity.setActivityId(resultSet.getInt(1));
+                activity.setCategoryOfActivityId(resultSet.getInt(2));
+                activity.setName(resultSet.getString(3));
+            }
+        } else {
+            activity = null;
+        }
+        return activity;
+    }
+
 
     @Override
     public Activity save(Activity activity) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
-            preparedStatement.setInt(i++, activity.getActivityId());
             preparedStatement.setInt(i++, activity.getCategoryOfActivityId());
             preparedStatement.setString(i, activity.getName());
             if (preparedStatement.executeUpdate() > 0) {

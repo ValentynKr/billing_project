@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/jsp/editOrDeleteUser.jsp" class="btn btn-secondary btn-lg active"
+<a href="${pageContext.request.contextPath}/jsp/editOrDeleteActivity.jsp" class="btn btn-secondary btn-lg active"
    role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
 
 
@@ -31,18 +31,19 @@
 <hr>
 
 <div class="container-fluid">
-    <form class="form-signin" action="<c:url value="/editUserAdminForm"/>" method="post">
-        <c:set var="localUser" value="${sessionScope.userToEdit}"/>
-        <c:set var="isAdmin" value="0" scope="page"/>
-        <c:if test="${localUser.admin}">
-            <c:set var="isAdmin" value="1"/>
-        </c:if>
+    <form class="form-signin" action="<c:url value="/editActivityAdminForm"/>" method="post">
+        <c:set var="localActivity" value="${sessionScope.activityToEdit}"/>
+
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
-        <input type="text" class="form-control" name="name" value="${localUser.name}"/>
-        <input type="text" class="form-control" name="email" value="${localUser.email}"/>
-        <input type="text" class="form-control" name="isAdmin" value="${isAdmin}"/>
-        <input type="password" class="form-control" name="password"
-               placeholder="<fmt:message key="placeholder.newPassword"/>"/>
+
+        <label for="activityCategoryOfEditedActivity"><fmt:message key="userActivity.activityName"/></label>
+        <select class="form-control" name="activityCategoryOfEditedActivity" id="activityCategoryOfEditedActivity">
+            <c:forEach var="listOfAllActivityCategories" items="${sessionScope.listOfAllActivityCategories}">
+                <option>${listOfAllActivityCategories.categoryName}</option>
+            </c:forEach>
+        </select>
+
+        <input type="text" class="form-control" name="name" value="${localActivity.name}"/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
     </form>
     <c:if test="${not empty sessionScope.Alert}">

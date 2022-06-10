@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><fmt:message key="label.changeUserInfo"/></title>
+    <title><fmt:message key="label.changeInfo"/></title>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/signin.css" rel="stylesheet">
 
@@ -26,7 +26,7 @@
     <a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active"
        role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
 </c:if>
-
+<hr>
 <div class="container">
     <div class="btn-group pull-left">
         <p class="h1"><fmt:message key="title.changeUserInfo"/></p>
@@ -37,7 +37,6 @@
 <div class="container-fluid">
     <form class="form-signin" action="<c:url value="/changeUserInfo"/>" method="post">
         <c:set var="localUser" value="${sessionScope.user}"/>
-        <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
         <input type="text" class="form-control" name="name" value="${localUser.name}"/>
         <input type="text" class="form-control" name="email" value="${localUser.email}"/>
         <input type="password" class="form-control" name="password"

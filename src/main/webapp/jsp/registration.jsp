@@ -20,7 +20,7 @@
 
 </head>
 <body>
-<a href="../login.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
+<a href="${pageContext.request.contextPath}/login.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
 
 <div class="container-fluid">
     <form class="form-signin" action="<c:url value="/registration"/>" method="post">

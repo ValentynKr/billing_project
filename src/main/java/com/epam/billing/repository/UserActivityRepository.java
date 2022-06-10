@@ -1,6 +1,6 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
+import com.epam.billing.DTO.UserActivityUserNameIdDurationRecordingDTO;
 import com.epam.billing.entity.UserActivity;
 
 import java.sql.*;
@@ -195,47 +195,47 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return userActivity;
     }
 
-    public List<UserActivityUserNameIdDurationRecording> getUserActivityUserNameIdDurationDTO(int userId, int languageId) {
-        List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
-        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
+    public List<UserActivityUserNameIdDurationRecordingDTO> getUserActivityUserNameIdDurationDTO(int userId, int languageId) {
+        List<UserActivityUserNameIdDurationRecordingDTO> userActivityUserNameIdDurationRecordingDTOS = new ArrayList<>();
+        UserActivityUserNameIdDurationRecordingDTO userActivityUserNameIdDurationRecordingDTO;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(JOIN_USER_NAME)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
-                userActivityUserNameIdDurationRecording.setActivityCategoryName(resultSet.getString(1));
-                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(2));
-                userActivityUserNameIdDurationRecording.setUserName(resultSet.getString(3));
-                userActivityUserNameIdDurationRecording.setActivityDuration(resultSet.getFloat(4));
-                userActivityUserNameIdDurationRecordings.add(userActivityUserNameIdDurationRecording);
+                userActivityUserNameIdDurationRecordingDTO = new UserActivityUserNameIdDurationRecordingDTO();
+                userActivityUserNameIdDurationRecordingDTO.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecordingDTO.setActivityName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecordingDTO.setUserName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecordingDTO.setActivityDuration(resultSet.getFloat(4));
+                userActivityUserNameIdDurationRecordingDTOS.add(userActivityUserNameIdDurationRecordingDTO);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return userActivityUserNameIdDurationRecordings;
+        return userActivityUserNameIdDurationRecordingDTOS;
     }
 
-    public List<UserActivityUserNameIdDurationRecording> getAllUserActivitiesDurationDTO(int languageId) {
-        List<UserActivityUserNameIdDurationRecording> userActivityUserNameIdDurationRecordings = new ArrayList<>();
-        UserActivityUserNameIdDurationRecording userActivityUserNameIdDurationRecording;
+    public List<UserActivityUserNameIdDurationRecordingDTO> getAllUserActivitiesDurationDTO(int languageId) {
+        List<UserActivityUserNameIdDurationRecordingDTO> userActivityUserNameIdDurationRecordingDTOS = new ArrayList<>();
+        UserActivityUserNameIdDurationRecordingDTO userActivityUserNameIdDurationRecordingDTO;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(JOIN_ALL)) {
             preparedStatement.setInt(1, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                userActivityUserNameIdDurationRecording = new UserActivityUserNameIdDurationRecording();
-                userActivityUserNameIdDurationRecording.setActivityCategoryName(resultSet.getString(1));
-                userActivityUserNameIdDurationRecording.setActivityName(resultSet.getString(2));
-                userActivityUserNameIdDurationRecording.setUserName(resultSet.getString(3));
-                userActivityUserNameIdDurationRecording.setActivityDuration(resultSet.getFloat(4));
-                userActivityUserNameIdDurationRecordings.add(userActivityUserNameIdDurationRecording);
+                userActivityUserNameIdDurationRecordingDTO = new UserActivityUserNameIdDurationRecordingDTO();
+                userActivityUserNameIdDurationRecordingDTO.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecordingDTO.setActivityName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecordingDTO.setUserName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecordingDTO.setActivityDuration(resultSet.getFloat(4));
+                userActivityUserNameIdDurationRecordingDTOS.add(userActivityUserNameIdDurationRecordingDTO);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return userActivityUserNameIdDurationRecordings;
+        return userActivityUserNameIdDurationRecordingDTOS;
     }
 
     private UserActivity createEntity(ResultSet resultSet) throws SQLException {

@@ -38,7 +38,7 @@ public class UserRequestServlet extends HttpServlet {
         }
         int userId = Integer.parseInt(req.getParameter("userId"));
         String activityName = req.getParameter("activityNameForRequest");
-        Activity activity = activityService.getByName(activityName);
+        Activity activity = activityService.getByNameNotSafe(activityName);
         request = request.setRequestStatus(RequestStatus.UNRESOLVED)
                 .setRequestType(RequestType.valueOf(type)).setNewActivityName(newActivityName)
                 .setUserId(userId).setActivityId(activity.getActivityId()).setComment(comment);

@@ -1,6 +1,5 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.DTO.UserActivityUserNameIdDurationRecording;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.Language;
 import com.epam.billing.entity.User;
@@ -47,7 +46,7 @@ public class AddingUserActivityDurationServlet extends HttpServlet {
 
             duration = duration.replace(",", ".");
             float durationFloat = Float.parseFloat(duration);  // <--- try/catch clause need to be put in (local)
-            Activity activity = activityService.getByName(userActivityName);
+            Activity activity = activityService.getByNameNotSafe(userActivityName);
             UserActivity userActivity = userActivityService.getByActivityIdAndUserId(activity.getActivityId(), user.getUserId());
             userActivity.setDurationOfActivity(durationFloat + userActivity.getDurationOfActivity());
             userActivityService.update(userActivity);

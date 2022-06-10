@@ -1,5 +1,6 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.entity.Language;
 import com.epam.billing.entity.User;
 import com.epam.billing.service.*;
 import com.epam.billing.utils.PasswordHashingUtil;
@@ -17,10 +18,14 @@ public class EditUserAdminFormServlet extends HttpServlet {
     private static final String EMAIL_IS_INVALID_MESSAGE = "Chosen email is invalid. It should`n contain special symbols or cyrillic letters. Example - ggg@gmail.com";
     private static final String PASSWORD_IS_INVALID_MESSAGE = "Chosen pass is invalid. It should contain at least 8 symbols, including number, letter and special symbol";
     private UserService userService;
+    private UserActivityService userActivityService;
+    private LanguageService languageService;
 
     @Override
     public void init() {
         userService = (UserService) getServletContext().getAttribute("userService");
+        userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
+        languageService = (LanguageService) getServletContext().getAttribute("languageService");
     }
 
     @Override
@@ -29,6 +34,7 @@ public class EditUserAdminFormServlet extends HttpServlet {
         int isAdminNum = Integer.parseInt(req.getParameter("isAdmin"));
         boolean isAdmin;
         isAdmin = isAdminNum > 0;
+        Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         User user = (User) req.getSession().getAttribute("userToEdit");
         String newPassword = req.getParameter("password");
         String currentPassword = user.getPassword();
@@ -49,6 +55,8 @@ public class EditUserAdminFormServlet extends HttpServlet {
                 req.getSession().setAttribute("Alert", EMAIL_IS_INVALID_MESSAGE);
             }
         }
+        req.getSession().setAttribute("userActivities",
+                userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
         resp.sendRedirect("/billing_project/jsp/editOrDeleteUser.jsp");
     }
 

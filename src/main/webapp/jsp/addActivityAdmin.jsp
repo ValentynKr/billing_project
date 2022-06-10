@@ -10,39 +10,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><fmt:message key="label.changeInfo"/></title>
+
+    <title><fmt:message key="addUser.label"/></title>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/signin.css" rel="stylesheet">
 
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
 </head>
 <body>
-
-<a href="${pageContext.request.contextPath}/jsp/editOrDeleteUser.jsp" class="btn btn-secondary btn-lg active"
-   role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
-
-
+<a href="${pageContext.request.contextPath}/jsp/welcome-admin.jsp" class="btn btn-secondary btn-lg active" role="button"
+   aria-pressed="true"><fmt:message key="button.back"/></a>
+<hr>
 <div class="container">
     <div class="btn-group pull-left">
-        <p class="h1"><fmt:message key="title.changeUserInfo"/></p>
+        <p class="h1"><fmt:message key="addActivity.button"/></p>
     </div>
 </div>
 <hr>
 
 <div class="container-fluid">
-    <form class="form-signin" action="<c:url value="/editUserAdminForm"/>" method="post">
-        <c:set var="localUser" value="${sessionScope.userToEdit}"/>
-        <c:set var="isAdmin" value="0" scope="page"/>
-        <c:if test="${localUser.admin}">
-            <c:set var="isAdmin" value="1"/>
-        </c:if>
-        <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
-        <input type="text" class="form-control" name="name" value="${localUser.name}"/>
-        <input type="text" class="form-control" name="email" value="${localUser.email}"/>
-        <input type="text" class="form-control" name="isAdmin" value="${isAdmin}"/>
-        <input type="password" class="form-control" name="password"
-               placeholder="<fmt:message key="placeholder.newPassword"/>"/>
+    <form class="form-signin" action="<c:url value="/addActivityAdmin"/>" method="post">
+        <label for="activityCategoryOfNewActivity"><fmt:message key="userActivity.activityName"/></label>
+        <select class="form-control" name="activityCategoryOfNewActivity" id="activityCategoryOfNewActivity">
+            <c:forEach var="listOfOpenedActivityCategories" items="${sessionScope.listOfOpenedActivityCategories}">
+                <option>${listOfOpenedActivityCategories.categoryName}</option>
+            </c:forEach>
+        </select>
+        <input type="text" class="form-control" name="newActivityName"
+               placeholder="<fmt:message key="label.newActivityName"/>" required/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
     </form>
     <c:if test="${not empty sessionScope.Alert}">
@@ -53,7 +50,7 @@
             </div>
         </div>
     </c:if>
-</div>
 
+</div>
 </body>
 </html>

@@ -21,8 +21,12 @@
 
 <a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.logout"/></a>
 <a href="${pageContext.request.contextPath}/jsp/changeUserInfo.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="title.changeUserInfo"/></a>
-<a href="${pageContext.request.contextPath}/jsp/addUserAdmin.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="addUser.button"/></a>
-<a href="${pageContext.request.contextPath}/jsp/editOrDeleteUser.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteUser"/></a>
+<a href="${pageContext.request.contextPath}/jsp/addUserAdmin.jsp" class="btn btn-warning" role="button" aria-pressed="true"><fmt:message key="addUser.button"/></a>
+<a href="${pageContext.request.contextPath}/jsp/editOrDeleteUser.jsp" class="btn btn-warning" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteUser"/></a>
+<a href="${pageContext.request.contextPath}/jsp/addActivityAdmin.jsp" class="btn btn-primary" role="button" aria-pressed="true"><fmt:message key="addActivity.button"/></a>
+<a href="${pageContext.request.contextPath}/jsp/editOrDeleteActivity.jsp" class="btn btn-primary" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteActivity"/></a>
+<a href="${pageContext.request.contextPath}/jsp/addCategoryAdmin.jsp" class="btn btn-info" role="button" aria-pressed="true"><fmt:message key="addCategoryOfActivity.button"/></a>
+<a href="${pageContext.request.contextPath}/jsp/editOrDeleteCategory.jsp" class="btn btn-info" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteCategory"/></a>
 
 
 <div class="container">

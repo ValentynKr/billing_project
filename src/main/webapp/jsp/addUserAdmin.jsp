@@ -21,10 +21,16 @@
 </head>
 <body>
 <a href="${pageContext.request.contextPath}/jsp/welcome-admin.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
+<hr>
+<div class="container">
+    <div class="btn-group pull-left">
+        <p class="h1"><fmt:message key="addUser.label"/></p>
+    </div>
+</div>
+<hr>
 
 <div class="container-fluid">
     <form class="form-signin" action="<c:url value="/addUserAdmin"/>" method="post">
-        <h2 class="form-signin-heading fade in text-center"><fmt:message key="addUser.label"/></h2>
         <input type="text" class="form-control" name="name" placeholder="<fmt:message key="placeholder.username"/>" required/>
         <input type="text" class="form-control" name="email" placeholder="<fmt:message key="placeholder.email"/>" required/>
         <input type="text" class="form-control" name="isAdmin" placeholder="<fmt:message key="placeholder.status"/>" required/>

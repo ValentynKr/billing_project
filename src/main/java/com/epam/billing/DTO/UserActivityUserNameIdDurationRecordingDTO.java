@@ -1,6 +1,6 @@
 package com.epam.billing.DTO;
 
-public class UserActivityUserNameIdDurationRecording {
+public class UserActivityUserNameIdDurationRecordingDTO {
 
     private String activityCategoryName;
     private String activityName;
@@ -12,7 +12,7 @@ public class UserActivityUserNameIdDurationRecording {
         return activityCategoryName;
     }
 
-    public UserActivityUserNameIdDurationRecording setActivityCategoryName(String activityCategoryName) {
+    public UserActivityUserNameIdDurationRecordingDTO setActivityCategoryName(String activityCategoryName) {
         this.activityCategoryName = activityCategoryName;
         return this;
     }
@@ -21,7 +21,7 @@ public class UserActivityUserNameIdDurationRecording {
         return activityName;
     }
 
-    public UserActivityUserNameIdDurationRecording setActivityName(String activityName) {
+    public UserActivityUserNameIdDurationRecordingDTO setActivityName(String activityName) {
         this.activityName = activityName;
         return this;
     }
@@ -30,7 +30,7 @@ public class UserActivityUserNameIdDurationRecording {
         return userName;
     }
 
-    public UserActivityUserNameIdDurationRecording setUserName(String userName) {
+    public UserActivityUserNameIdDurationRecordingDTO setUserName(String userName) {
         this.userName = userName;
         return this;
     }
@@ -39,7 +39,7 @@ public class UserActivityUserNameIdDurationRecording {
         return activityDuration;
     }
 
-    public UserActivityUserNameIdDurationRecording setActivityDuration(float activityDuration) {
+    public UserActivityUserNameIdDurationRecordingDTO setActivityDuration(float activityDuration) {
         this.activityDuration = activityDuration;
         return this;
     }
