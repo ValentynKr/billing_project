@@ -4,6 +4,7 @@ public class ActivityCategory {
 
     private int categoryId;
     private String categoryName;
+    private ActivityCategoryStatus activityCategoryStatus;
 
     @Override
     public String toString() {
@@ -28,6 +29,15 @@ public class ActivityCategory {
 
     public ActivityCategory setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+        return this;
+    }
+
+    public ActivityCategoryStatus getActivityCategoryStatus() {
+        return activityCategoryStatus;
+    }
+
+    public ActivityCategory setActivityCategoryStatus(ActivityCategoryStatus activityCategoryStatus) {
+        this.activityCategoryStatus = activityCategoryStatus;
         return this;
     }
 }

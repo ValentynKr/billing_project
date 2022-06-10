@@ -35,7 +35,7 @@ public class LanguageRepository extends AbstractRepository<Language> {
     }
 
     @Override
-    public Language getById(long id) {
+    public Language getById(int id) {
         Language language = new Language();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {

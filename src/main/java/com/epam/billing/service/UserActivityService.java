@@ -30,7 +30,7 @@ public class UserActivityService {
         return userActivityRepository.existById(id);
     }
 
-    public UserActivity getById(long id) {
+    public UserActivity getById(int id) {
         return userActivityRepository.getById(id);
     }
 

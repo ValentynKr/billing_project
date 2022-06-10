@@ -57,7 +57,7 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     @Override
-    public User getById(long id) {
+    public User getById(int id) {
         User user = new User();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {

@@ -34,7 +34,7 @@ public class UserService {
         return userRepository.existById(id);
     }
 
-    public User getById(long id) {
+    public User getById(int id) {
         return userRepository.getById(id);
     }
 

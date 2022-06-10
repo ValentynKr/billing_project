@@ -42,6 +42,7 @@ public class EditActivityAdminServlet extends HttpServlet {
         }
         activityCategoryList.remove(category);
         activityCategoryList.add(0, category);
+        req.getSession().setAttribute("activityCategoryOfNotEditedActivity", category);
         req.getSession().setAttribute("listOfAllActivityCategories", activityCategoryList);
         req.getSession().setAttribute("activityToEdit", activity);
         req.getRequestDispatcher("/jsp/activityEditingForm.jsp").forward(req, resp);

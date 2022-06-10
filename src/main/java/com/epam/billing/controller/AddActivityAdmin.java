@@ -46,6 +46,7 @@ public class AddActivityAdmin extends HttpServlet {
             activityService.save(newActivity);
             req.getSession().setAttribute("Alert", "Activity added");
             req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
+            req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
         }
         req.getRequestDispatcher("/jsp/addActivityAdmin.jsp").forward(req, resp);
 

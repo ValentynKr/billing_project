@@ -35,7 +35,7 @@ public class ActivityService {
         return activityRepository.existById(id);
     }
 
-    public Activity getById(long id) {
+    public Activity getById(int id) {
         return activityRepository.getById(id);
     }
 

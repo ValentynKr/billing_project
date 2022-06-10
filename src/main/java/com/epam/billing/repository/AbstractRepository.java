@@ -14,7 +14,7 @@ public abstract class AbstractRepository<T> {
 
     public abstract List<T> getAll();
 
-    public abstract T getById(long id);
+    public abstract T getById(int id);
 
     public abstract T save(T t);
 

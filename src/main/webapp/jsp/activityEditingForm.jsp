@@ -35,7 +35,6 @@
         <c:set var="localActivity" value="${sessionScope.activityToEdit}"/>
 
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
-
         <label for="activityCategoryOfEditedActivity"><fmt:message key="userActivity.activityName"/></label>
         <select class="form-control" name="activityCategoryOfEditedActivity" id="activityCategoryOfEditedActivity">
             <c:forEach var="listOfAllActivityCategories" items="${sessionScope.listOfAllActivityCategories}">

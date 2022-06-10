@@ -31,7 +31,7 @@ public class UserRequestService {
         return userRequestRepository.existById(id);
     }
 
-    public UserRequest getById(long id) {
+    public UserRequest getById(int id) {
         return userRequestRepository.getById(id);
     }
 

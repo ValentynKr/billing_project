@@ -65,7 +65,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     }
 
     @Override
-    public UserActivity getById(long id) {
+    public UserActivity getById(int id) {
         UserActivity userActivity = new UserActivity();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {

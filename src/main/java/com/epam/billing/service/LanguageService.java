@@ -29,7 +29,7 @@ public class LanguageService {
         return languageRepository.existById(id);
     }
 
-    public Language getById(long id) { return languageRepository.getById(id); }
+    public Language getById(int id) { return languageRepository.getById(id); }
 
     public Language getByShortName(String name) { return languageRepository.getByShortName(name); }
 

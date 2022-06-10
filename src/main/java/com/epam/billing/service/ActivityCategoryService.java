@@ -17,15 +17,18 @@ public class ActivityCategoryService {
     public List<ActivityCategory> getAll() {
         return activityCategoryRepository.getAll();
     }
+
     public List<ActivityCategory> getAllWithLocalizedNames(int languageId) {
         return activityCategoryRepository.getAllWithLocalizedNames(languageId);
     }
-    public List<ActivityCategory> getOpenedWithLocalizedNames (int languageId) {
-        return activityCategoryRepository.getOpenedWithLocalizedNames(languageId);}
+
+    public List<ActivityCategory> getOpenedWithLocalizedNames(int languageId) {
+        return activityCategoryRepository.getOpenedWithLocalizedNames(languageId);
+    }
 
     public List<ActivityCategoryIdLocalizedNameStatusDTO> getAllWithLocalizedNameStatusDTO(int languageId) {
-        return activityCategoryRepository.getAllWithLocalizedNameStatusDTO(languageId);}
-
+        return activityCategoryRepository.getAllWithLocalizedNameStatusDTO(languageId);
+    }
 
     public void save(ActivityCategory activityCategory) {
         activityCategoryRepository.save(activityCategory);
@@ -39,8 +42,12 @@ public class ActivityCategoryService {
         return activityCategoryRepository.existById(id);
     }
 
-    public ActivityCategory getById(long id) {
+    public ActivityCategory getById(int id) {
         return activityCategoryRepository.getById(id);
+    }
+
+    public ActivityCategory getByIdLocalized(int categoryId, int languageId) {
+        return activityCategoryRepository.getByIdLocalized(categoryId, languageId);
     }
 
     public ActivityCategory getByNameNotSafe(String name, int languageId) {
