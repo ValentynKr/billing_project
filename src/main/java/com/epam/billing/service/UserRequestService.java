@@ -27,7 +27,7 @@ public class UserRequestService {
         return userRequestRepository.delete(userRequest);
     }
 
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         return userRequestRepository.existById(id);
     }
 

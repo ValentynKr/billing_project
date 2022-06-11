@@ -130,7 +130,7 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
             preparedStatement.setLong(1, id);

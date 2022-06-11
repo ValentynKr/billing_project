@@ -35,13 +35,13 @@
         <c:set var="localActivity" value="${sessionScope.activityToEdit}"/>
 
         <h2 class="form-signin-heading fade in text-center"><fmt:message key="title.changeUserInfo"/></h2>
-        <label for="activityCategoryOfEditedActivity"><fmt:message key="userActivity.activityName"/></label>
+        <label for="activityCategoryOfEditedActivity"><fmt:message key="placeholder.activityCategoryName"/></label>
         <select class="form-control" name="activityCategoryOfEditedActivity" id="activityCategoryOfEditedActivity">
             <c:forEach var="listOfAllActivityCategories" items="${sessionScope.listOfAllActivityCategories}">
                 <option>${listOfAllActivityCategories.categoryName}</option>
             </c:forEach>
         </select>
-
+        <label for="activityCategoryOfEditedActivity"><fmt:message key="placeholder.activityName"/></label>
         <input type="text" class="form-control" name="name" value="${localActivity.name}"/>
         <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
     </form>
@@ -54,6 +54,5 @@
         </div>
     </c:if>
 </div>
-
 </body>
 </html>

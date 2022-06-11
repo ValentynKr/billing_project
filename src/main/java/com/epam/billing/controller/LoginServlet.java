@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String login = req.getParameter("login");
+        String login = req.getParameter("login").trim();
         String password = req.getParameter("password");
         Optional<User> userOptional = userService.getByEmail(login);
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());

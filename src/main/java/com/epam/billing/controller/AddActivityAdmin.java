@@ -1,6 +1,7 @@
 package com.epam.billing.controller;
 
 
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.entity.Language;
@@ -32,13 +33,16 @@ public class AddActivityAdmin extends HttpServlet {
         String newActivityName = req.getParameter("newActivityName");
         String activityCategoryOfNewActivity = req.getParameter("activityCategoryOfNewActivity");
 
-        ActivityCategory activityCategory = activityCategoryService
+
+        ActivityCategoryIdLocalizedNameStatusDTO activityCategory = activityCategoryService
                 .getByNameNotSafe(activityCategoryOfNewActivity, language.getId());
 
         if (activityService.getByNameInOneCategory(newActivityName, activityCategory.getCategoryId()).isPresent()) {
             req.getSession().setAttribute("Alert", "Activity with such name already exists in chosen category");
         } else {
-            Activity newActivity = new Activity().setCategoryOfActivityId(activityCategory.getCategoryId()).setName(newActivityName);
+            Activity newActivity = new Activity()
+                    .setCategoryOfActivityId(activityCategory.getCategoryId())
+                    .setName(newActivityName);
             activityService.save(newActivity);
             req.getSession().setAttribute("Alert", "Activity added");
             req.getSession().setAttribute("listOfAllActivities", activityService.getAll());

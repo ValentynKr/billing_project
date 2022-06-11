@@ -39,7 +39,7 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         UserRequest userRequest = new UserRequest();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userRequest.setUserRequestId(resultSet.getInt(1));
@@ -111,10 +111,10 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException throwables) {

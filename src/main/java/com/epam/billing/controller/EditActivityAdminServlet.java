@@ -1,5 +1,7 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.service.*;
@@ -26,9 +28,10 @@ public class EditActivityAdminServlet extends HttpServlet {
         int activityId = Integer.parseInt(req.getParameter("activityIdToEdit"));
         Activity activity = activityService.getById(activityId);
         int categoryId = activity.getCategoryOfActivityId();
-        List<ActivityCategory> activityCategoryList = (List<ActivityCategory>) req.getSession().getAttribute("listOfAllActivityCategories");
-        ActivityCategory category = new ActivityCategory();
-        for (ActivityCategory activityCategory : activityCategoryList) {
+        List<ActivityCategoryIdLocalizedNameStatusDTO> activityCategoryList = (List<ActivityCategoryIdLocalizedNameStatusDTO>) req.getSession()
+                .getAttribute("listOfAllActivityCategoriesWithStatus"); //toDo should be changed to UI
+        ActivityCategoryIdLocalizedNameStatusDTO category = new ActivityCategoryIdLocalizedNameStatusDTO();
+        for (ActivityCategoryIdLocalizedNameStatusDTO activityCategory : activityCategoryList) {
             if (activityCategory.getCategoryId() == categoryId) {
                 category = activityCategory;
             }

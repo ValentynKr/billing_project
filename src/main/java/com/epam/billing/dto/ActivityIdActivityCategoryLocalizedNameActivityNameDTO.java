@@ -1,4 +1,4 @@
-package com.epam.billing.DTO;
+package com.epam.billing.dto;
 
 public class ActivityIdActivityCategoryLocalizedNameActivityNameDTO {
 

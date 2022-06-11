@@ -1,6 +1,6 @@
 package com.epam.billing.service;
 
-import com.epam.billing.DTO.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
+import com.epam.billing.dto.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.repository.ActivityRepository;
 
@@ -31,7 +31,7 @@ public class ActivityService {
         return activityRepository.delete(activity);
     }
 
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         return activityRepository.existById(id);
     }
 

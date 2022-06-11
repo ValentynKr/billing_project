@@ -1,7 +1,7 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.DTO.ActivityCategoryIdLocalizedNameStatusDTO;
-import com.epam.billing.entity.Activity;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.entity.ActivityCategoryStatus;
 
@@ -13,7 +13,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
 
     private static final String SELECT_ALL = "SELECT * FROM activity_category";
     private static final String SELECT_ALL_LOCALIZED = "SELECT\n" +
-            "activity_category.id, activity_category_description.name, activity_category.activity_category_status\n" +
+            "activity_category.id, activity_category_description.name\n" +
             "FROM  activity_category\n" +
             "inner JOIN activity_category_description\n" +
             "on activity_category_description.category_id = activity_category.id\n" +
@@ -47,7 +47,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             "FROM activity_category WHERE id = ?)";
     private static final String INSERT = "INSERT INTO activity_category VALUES (DEFAULT, ?)";
     private static final String DELETE = "DELETE FROM activity_category WHERE id = ?";
-    private static final String UPDATE = "UPDATE activity_category SET name=? " +
+    private static final String UPDATE = "UPDATE activity_category SET activity_category_status=? " +
             "WHERE id=?";
 
     @Override
@@ -59,8 +59,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             while (resultSet.next()) {
                 ActivityCategory activityCategory = new ActivityCategory();
                 activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(2)));
                 activityCategoryList.add(activityCategory);
             }
         } catch (SQLException throwables) {
@@ -69,23 +68,22 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         return activityCategoryList;
     }
 
-    public List<ActivityCategory> getAllWithLocalizedNames(int languageId) {
-        List<ActivityCategory> activityCategoryList = new ArrayList<>();
+    public List<ActivityCategoryIdLocalizedNameDTO> getAllWithLocalizedNames(int languageId) {
+        List<ActivityCategoryIdLocalizedNameDTO> activityCategoryIdLocalizedNameDTOList = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_LOCALIZED)) {
             preparedStatement.setInt(1, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                ActivityCategory activityCategory = new ActivityCategory();
-                activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
-                activityCategoryList.add(activityCategory);
+                ActivityCategoryIdLocalizedNameDTO activityCategoryIdLocalizedNameDTO = new ActivityCategoryIdLocalizedNameDTO();
+                activityCategoryIdLocalizedNameDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameDTOList.add(activityCategoryIdLocalizedNameDTO);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return activityCategoryList;
+        return activityCategoryIdLocalizedNameDTOList;
     }
 
     public List<ActivityCategoryIdLocalizedNameStatusDTO> getAllWithLocalizedNameStatusDTO(int languageId) {
@@ -107,23 +105,23 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         return categoryIdLocalizedNameStatusList;
     }
 
-    public List<ActivityCategory> getOpenedWithLocalizedNames(int languageId) {
-        List<ActivityCategory> activityCategoryList = new ArrayList<>();
+    public List<ActivityCategoryIdLocalizedNameStatusDTO> getOpenedWithLocalizedNames(int languageId) {
+        List<ActivityCategoryIdLocalizedNameStatusDTO> activityCategoryIdLocalizedNameStatusDTOList = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_OPENED_AND_LOCALIZED)) {
             preparedStatement.setInt(1, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                ActivityCategory activityCategory = new ActivityCategory();
-                activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
-                activityCategoryList.add(activityCategory);
+                ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameStatusDTO.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+                activityCategoryIdLocalizedNameStatusDTOList.add(activityCategoryIdLocalizedNameStatusDTO);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return activityCategoryList;
+        return activityCategoryIdLocalizedNameStatusDTOList;
     }
 
     @Override
@@ -135,8 +133,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(null);
+                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(2)));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -144,40 +141,40 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         return activityCategory;
     }
 
-    public ActivityCategory getByIdLocalized(int categoryId, int languageId) {
-        ActivityCategory activityCategory = new ActivityCategory();
+    public ActivityCategoryIdLocalizedNameStatusDTO getByIdLocalized(int categoryId, int languageId) {
+        ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID_LOCALIZED)) {
             preparedStatement.setInt(1, categoryId);
             preparedStatement.setInt(2, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameStatusDTO.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return activityCategory;
+        return activityCategoryIdLocalizedNameStatusDTO;
     }
 
-    public ActivityCategory getByNameNotSafe(String name, int languageId) {
-        ActivityCategory activityCategory = new ActivityCategory();
+    public ActivityCategoryIdLocalizedNameStatusDTO getByNameNotSafe(String name, int languageId) {
+        ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {
             preparedStatement.setString(1, name);
             preparedStatement.setInt(2, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                activityCategory.setCategoryId(resultSet.getInt(1));
-                activityCategory.setCategoryName(resultSet.getString(2));
-                activityCategory.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameStatusDTO.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return activityCategory;
+        return activityCategoryIdLocalizedNameStatusDTO;
     }
 
     @Override
@@ -186,8 +183,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT,
                      Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
-            preparedStatement.setInt(i++, activityCategory.getCategoryId());
-            preparedStatement.setString(i, activityCategory.getCategoryName());
+            preparedStatement.setString(i, activityCategory.getActivityCategoryStatus().toString());
             if (preparedStatement.executeUpdate() > 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
@@ -206,8 +202,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
-            preparedStatement.setString(counter++, activityCategory.getCategoryName());
-            preparedStatement.setLong(counter++, activityCategory.getCategoryId());
+            preparedStatement.setInt(counter++, activityCategory.getCategoryId());
             preparedStatement.setString(counter, activityCategory.getActivityCategoryStatus().toString());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -230,10 +225,10 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException throwables) {

@@ -1,5 +1,7 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.*;
 import com.epam.billing.service.*;
 import javax.servlet.ServletException;
@@ -33,11 +35,11 @@ public class EditActivityAdminFormServlet extends HttpServlet {
 
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
 
-        ActivityCategory oldActivityCategory = (ActivityCategory) req.getSession().getAttribute("activityCategoryOfNotEditedActivity");
+        ActivityCategoryIdLocalizedNameStatusDTO oldActivityCategory = (ActivityCategoryIdLocalizedNameStatusDTO) req.getSession().getAttribute("activityCategoryOfNotEditedActivity");
         int idOfOldCategory = oldActivityCategory.getCategoryId();
 
         String nameOfNewCategory = req.getParameter("activityCategoryOfEditedActivity");
-        ActivityCategory newActivityCategory = activityCategoryService.getByNameNotSafe(nameOfNewCategory, language.getId());
+        ActivityCategoryIdLocalizedNameStatusDTO newActivityCategory = activityCategoryService.getByNameNotSafe(nameOfNewCategory, language.getId());
         int idOfNewCategory = newActivityCategory.getCategoryId();
 
         Activity newActivity = (Activity) req.getSession().getAttribute("activityToEdit");
@@ -59,13 +61,19 @@ public class EditActivityAdminFormServlet extends HttpServlet {
                 }
             }
         }
-        newActivity.setName(req.getParameter("name"));
-        activityService.update(newActivity);
-        req.getSession().setAttribute("listOfAllActivityCategories", activityCategoryService.getAllWithLocalizedNames(language.getId()));
-        req.getSession().setAttribute("userActivities",
-                userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
-        req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
-        req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
-        req.getRequestDispatcher("/jsp/editOrDeleteActivity.jsp").forward(req, resp);
+        String newActivityName = req.getParameter("name");
+        if (activityService.getByNameInOneCategory(newActivityName, idOfNewCategory).isPresent()) {
+            req.getSession().setAttribute("Alert", "Activity with such name already exists in chosen category");
+            req.getRequestDispatcher("/jsp/activityEditingForm.jsp").forward(req, resp);
+        } else {
+            newActivity.setName(req.getParameter("name"));
+            activityService.update(newActivity);
+            req.getSession().setAttribute("listOfAllActivityCategories", activityCategoryService.getAllWithLocalizedNames(language.getId()));
+            req.getSession().setAttribute("userActivities",
+                    userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
+            req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
+            req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
+            req.getRequestDispatcher("/jsp/editOrDeleteActivity.jsp").forward(req, resp);
+        }
     }
 }

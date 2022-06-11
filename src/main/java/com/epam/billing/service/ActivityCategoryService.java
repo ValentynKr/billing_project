@@ -1,6 +1,7 @@
 package com.epam.billing.service;
 
-import com.epam.billing.DTO.ActivityCategoryIdLocalizedNameStatusDTO;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.repository.ActivityCategoryRepository;
 
@@ -18,11 +19,11 @@ public class ActivityCategoryService {
         return activityCategoryRepository.getAll();
     }
 
-    public List<ActivityCategory> getAllWithLocalizedNames(int languageId) {
+    public List<ActivityCategoryIdLocalizedNameDTO> getAllWithLocalizedNames(int languageId) {
         return activityCategoryRepository.getAllWithLocalizedNames(languageId);
     }
 
-    public List<ActivityCategory> getOpenedWithLocalizedNames(int languageId) {
+    public List<ActivityCategoryIdLocalizedNameStatusDTO> getOpenedWithLocalizedNames(int languageId) {
         return activityCategoryRepository.getOpenedWithLocalizedNames(languageId);
     }
 
@@ -38,7 +39,7 @@ public class ActivityCategoryService {
         return activityCategoryRepository.delete(activityCategory);
     }
 
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         return activityCategoryRepository.existById(id);
     }
 
@@ -46,11 +47,11 @@ public class ActivityCategoryService {
         return activityCategoryRepository.getById(id);
     }
 
-    public ActivityCategory getByIdLocalized(int categoryId, int languageId) {
+    public ActivityCategoryIdLocalizedNameStatusDTO getByIdLocalized(int categoryId, int languageId) {
         return activityCategoryRepository.getByIdLocalized(categoryId, languageId);
     }
 
-    public ActivityCategory getByNameNotSafe(String name, int languageId) {
+    public ActivityCategoryIdLocalizedNameStatusDTO getByNameNotSafe(String name, int languageId) {
         return activityCategoryRepository.getByNameNotSafe(name, languageId);
     }
 

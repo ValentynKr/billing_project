@@ -22,5 +22,5 @@ public abstract class AbstractRepository<T> {
 
     public abstract boolean delete(T t);
 
-    public abstract boolean existById(long id);
+    public abstract boolean existById(int id);
 }

@@ -29,7 +29,7 @@
             <tr>
                 <th><fmt:message key="placeholder.userId"/></th>
                 <th><fmt:message key="placeholder.username"/></th>
-                <th><fmt:message key="placeholder.status"/></th>
+                <th><fmt:message key="placeholder.adminstatus"/></th>
                 <th><fmt:message key="placeholder.email"/></th>
             </tr>
             </thead>

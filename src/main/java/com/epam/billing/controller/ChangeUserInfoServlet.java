@@ -28,22 +28,20 @@ public class ChangeUserInfoServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
         String newPassword = req.getParameter("password");
         String currentPassword = user.getPassword();
-        if (newPassword.isEmpty()) {
-            if (ValidationUtil.isEmailValid(req.getParameter("email"))) {
+        String newEmail = req.getParameter("email");
+
+        if (ValidationUtil.isEmailValid(newEmail)) {
+            if (newPassword.isEmpty()) {
                 updateUser(req, user, currentPassword);
             } else {
-                req.getSession().setAttribute("Alert", EMAIL_IS_INVALID_MESSAGE);
-            }
-        } else {
-            if (ValidationUtil.isEmailValid(req.getParameter("email"))) {
                 if (ValidationUtil.isPasswordValid(req.getParameter("password"))) {
                     updateUser(req, user, PasswordHashingUtil.getSaltedHash(currentPassword));
                 } else {
                     req.getSession().setAttribute("Alert", PASSWORD_IS_INVALID_MESSAGE);
                 }
-            } else {
-                req.getSession().setAttribute("Alert", EMAIL_IS_INVALID_MESSAGE);
             }
+        } else {
+            req.getSession().setAttribute("Alert", EMAIL_IS_INVALID_MESSAGE);
         }
         req.getRequestDispatcher("/jsp/changeUserInfo.jsp").forward(req, resp);
     }

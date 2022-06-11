@@ -102,10 +102,10 @@ public class LanguageRepository extends AbstractRepository<Language> {
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException throwables) {

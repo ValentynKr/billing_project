@@ -25,7 +25,7 @@ public class LanguageService {
         return languageRepository.delete(language);
     }
 
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         return languageRepository.existById(id);
     }
 

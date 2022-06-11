@@ -1,4 +1,4 @@
-package com.epam.billing.DTO;
+package com.epam.billing.dto;
 
 import com.epam.billing.entity.ActivityCategoryStatus;
 

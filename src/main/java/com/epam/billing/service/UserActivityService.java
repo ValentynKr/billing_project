@@ -1,6 +1,6 @@
 package com.epam.billing.service;
 
-import com.epam.billing.DTO.UserActivityUserNameIdDurationRecordingDTO;
+import com.epam.billing.dto.UserActivityUserNameIdDurationRecordingDTO;
 import com.epam.billing.entity.UserActivity;
 import com.epam.billing.repository.UserActivityRepository;
 
@@ -26,7 +26,7 @@ public class UserActivityService {
         return userActivityRepository.delete(userActivity);
     }
 
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         return userActivityRepository.existById(id);
     }
 
@@ -38,11 +38,11 @@ public class UserActivityService {
         return userActivityRepository.update(userActivity);
     }
 
-    public List<UserActivity> getByUserId(long id) {
+    public List<UserActivity> getByUserId(int id) {
         return userActivityRepository.getByUserId(id);
     }
 
-    public List<UserActivity> getByActivityId(long activityId) {
+    public List<UserActivity> getByActivityId(int activityId) {
         return userActivityRepository.getUserActivityByActivityId(activityId);
     }
     public UserActivity getByActivityIdAndUserId(int activityId, int userId) {

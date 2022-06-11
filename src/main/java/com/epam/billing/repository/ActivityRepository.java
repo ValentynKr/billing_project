@@ -1,6 +1,6 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.DTO.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
+import com.epam.billing.dto.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
 
 import java.sql.*;
@@ -16,7 +16,7 @@ public class ActivityRepository extends AbstractRepository<Activity> {
             "from activity\n" +
             "inner join activity_category_description\n" +
             "on  activity.category_id = activity_category_description.category_id\n" +
-            "where language_id=?;";
+            "where language_id=? order by activity_category_description.name;";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity WHERE id = ?";
     private static final String SELECT_ALL_WHERE_NAME = "SELECT * FROM activity WHERE name = ?";
     private static final String SELECT_ALL_WHERE_NAME_IN_CATEGORY = "SELECT * FROM activity WHERE name =? AND category_id =?;";
@@ -65,7 +65,7 @@ public class ActivityRepository extends AbstractRepository<Activity> {
         Activity activity = new Activity();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 activity.setActivityId(resultSet.getInt(1));
@@ -184,10 +184,10 @@ public class ActivityRepository extends AbstractRepository<Activity> {
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException throwables) {

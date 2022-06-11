@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet(urlPatterns = {"/editUserAdminForm"})
 public class EditUserAdminFormServlet extends HttpServlet {
@@ -37,6 +38,20 @@ public class EditUserAdminFormServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("userToEdit");
         String newPassword = req.getParameter("password");
         String currentPassword = user.getPassword();
+        if (user.getEmail().equals(req.getParameter("email"))) {
+            validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword);
+        } else {
+            Optional<User> potentiallyExistingUser = userService.getByEmail(req.getParameter("email"));
+            if (potentiallyExistingUser.isPresent()) {
+                req.getSession().setAttribute("Alert", "User with such email already exists");
+                resp.sendRedirect("/billing_project/jsp/userEditingForm.jsp");
+            } else {
+                validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword);
+            }
+        }
+    }
+
+    private void validateEmailPassAndUpdateUser(HttpServletRequest req, HttpServletResponse resp, boolean isAdmin, Language language, User user, String newPassword, String currentPassword) throws IOException {
         if (newPassword.isEmpty()) {
             if (ValidationUtil.isEmailValid(req.getParameter("email"))) {
                 updateUser(req, user, currentPassword, isAdmin);

@@ -1,6 +1,6 @@
 package com.epam.billing.repository;
 
-import com.epam.billing.DTO.UserActivityUserNameIdDurationRecordingDTO;
+import com.epam.billing.dto.UserActivityUserNameIdDurationRecordingDTO;
 import com.epam.billing.entity.UserActivity;
 
 import java.sql.*;
@@ -69,7 +69,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         UserActivity userActivity = new UserActivity();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivity.setUserActivityId(resultSet.getInt(1));
@@ -135,10 +135,10 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     }
 
     @Override
-    public boolean existById(long id) {
+    public boolean existById(int id) {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXIST_BY_ID)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next();
         } catch (SQLException throwables) {
@@ -147,12 +147,12 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return false;
     }
 
-    public List<UserActivity> getByUserId(long userId) {
+    public List<UserActivity> getByUserId(int userId) {
         List<UserActivity> userActivityList = new ArrayList<>();
         UserActivity userActivity;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_USER_ID)) {
-            preparedStatement.setLong(1, userId);
+            preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivity = createEntity(resultSet);
@@ -164,11 +164,11 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         return userActivityList;
     }
 
-    public List<UserActivity> getUserActivityByActivityId(long activityId) {
+    public List<UserActivity> getUserActivityByActivityId(int activityId) {
         List<UserActivity> userActivityList = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ACTIVITY_ID)) {
-            preparedStatement.setLong(1, activityId);
+            preparedStatement.setInt(1, activityId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivityList.add(createEntity(resultSet));
