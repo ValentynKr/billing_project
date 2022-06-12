@@ -6,6 +6,7 @@ import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.repository.ActivityCategoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ActivityCategoryService {
 
@@ -31,8 +32,8 @@ public class ActivityCategoryService {
         return activityCategoryRepository.getAllWithLocalizedNameStatusDTO(languageId);
     }
 
-    public void save(ActivityCategory activityCategory) {
-        activityCategoryRepository.save(activityCategory);
+    public ActivityCategory save(ActivityCategory activityCategory) {
+        return activityCategoryRepository.save(activityCategory);
     }
 
     public boolean delete(ActivityCategory activityCategory) {
@@ -53,6 +54,10 @@ public class ActivityCategoryService {
 
     public ActivityCategoryIdLocalizedNameStatusDTO getByNameNotSafe(String name, int languageId) {
         return activityCategoryRepository.getByNameNotSafe(name, languageId);
+    }
+
+    public Optional<ActivityCategoryIdLocalizedNameStatusDTO> getByNameSafe(String name, int languageId) {
+        return activityCategoryRepository.getByNameSafe(name, languageId);
     }
 
     public ActivityCategory update(ActivityCategory activityCategory) {

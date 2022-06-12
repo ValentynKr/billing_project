@@ -20,6 +20,7 @@ public class ContextListener implements ServletContextListener {
         initUserActivityService(context);
         initUserRequestService(context);
         initLanguageService(context);
+        initActivityCategoryDescriptionService(context);
     }
 
     private void initActivityCategoryService(ServletContext context) {
@@ -57,6 +58,11 @@ public class ContextListener implements ServletContextListener {
         context.setAttribute("languageService", languageService);
     }
 
+    private void initActivityCategoryDescriptionService(ServletContext context) {
+        ActivityCategoryDescriptionRepository activityCategoryDescriptionRepository = new ActivityCategoryDescriptionRepository();
+        ActivityCategoryDescriptionService activityCategoryDescriptionService = new ActivityCategoryDescriptionService(activityCategoryDescriptionRepository);
+        context.setAttribute("activityCategoryDescriptionService", activityCategoryDescriptionService);
+    }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {

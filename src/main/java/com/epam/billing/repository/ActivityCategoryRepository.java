@@ -8,6 +8,7 @@ import com.epam.billing.entity.ActivityCategoryStatus;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ActivityCategoryRepository extends AbstractRepository<ActivityCategory> {
 
@@ -175,6 +176,25 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             throwables.printStackTrace();
         }
         return activityCategoryIdLocalizedNameStatusDTO;
+    }
+
+    public Optional<ActivityCategoryIdLocalizedNameStatusDTO> getByNameSafe(String name, int languageId) {
+        ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, languageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+            while (resultSet.next()) {
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameStatusDTO.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+            }} else {activityCategoryIdLocalizedNameStatusDTO = null;}
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return Optional.ofNullable(activityCategoryIdLocalizedNameStatusDTO);
     }
 
     @Override

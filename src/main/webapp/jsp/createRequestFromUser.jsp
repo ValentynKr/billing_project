@@ -47,7 +47,7 @@
             </select>
             <label for="commentForAdmin"><fmt:message key="label.newActivityName"/></label>
             <input type="text" class="form-control" name="newActivityName" id="newActivityName"
-                   placeholder="New activity name">
+                   placeholder="<fmt:message key="label.newActivityName"/>">
             <label for="commentForAdmin"><fmt:message key="label.comment"/></label>
             <input type="text" class="form-control" name="commentForAdmin" id="commentForAdmin"
                    placeholder="<fmt:message key="placeholder.comment"/>">
