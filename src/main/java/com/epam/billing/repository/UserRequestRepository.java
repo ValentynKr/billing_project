@@ -12,10 +12,10 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     private static final String SELECT_ALL = "SELECT * FROM user_request";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
-    private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_request WHERE id = ?";
-    private static final String UPDATE = "UPDATE user_request SET user_id=?, request_type=?, request_status=?, " +
-            "activity_id=?, new_activity_name=?, comment=?" +
+    private static final String UPDATE = "UPDATE user_request SET request_date=?, user_id=?, request_type=?, request_status=?, " +
+            "activity_category_id=?, activity_id=?, user_activity_duration=?, new_activity_name=?, comment=?" +
             "WHERE id=?";
 
     @Override
@@ -43,12 +43,15 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userRequest.setUserRequestId(resultSet.getInt(1));
-                userRequest.setUserId(resultSet.getInt(2));
-                userRequest.setRequestType(RequestType.valueOf(resultSet.getString(3)));
-                userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString(4)));
-                userRequest.setActivityId(resultSet.getInt(5));
-                userRequest.setNewActivityName(resultSet.getString(6));
-                userRequest.setComment(resultSet.getString(7));
+                userRequest.setTimestamp(resultSet.getTimestamp(2));
+                userRequest.setUserId(resultSet.getInt(3));
+                userRequest.setRequestType(RequestType.valueOf(resultSet.getString(4)));
+                userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString(5)));
+                userRequest.setActivityCategoryId(resultSet.getInt(6));
+                userRequest.setActivityId(resultSet.getInt(7));
+                userRequest.setUserActivityDuration(resultSet.getFloat(8));
+                userRequest.setNewActivityName(resultSet.getString(9));
+                userRequest.setComment(resultSet.getString(10));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -61,11 +64,12 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
-
             preparedStatement.setInt(i++, userRequest.getUserId());
             preparedStatement.setString(i++, userRequest.getRequestType().toString());
             preparedStatement.setString(i++, userRequest.getRequestStatus().toString());
+            preparedStatement.setInt(i++, userRequest.getActivityCategoryId());
             preparedStatement.setInt(i++, userRequest.getActivityId());
+            preparedStatement.setFloat(i++, userRequest.getUserActivityDuration());
             preparedStatement.setString(i++, userRequest.getNewActivityName());
             preparedStatement.setString(i, userRequest.getComment());
 
@@ -87,9 +91,16 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
-            counter = insertDataFromEntity(userRequest, preparedStatement, counter);
+            preparedStatement.setInt(counter++, userRequest.getUserId());
+            preparedStatement.setTimestamp(counter++, userRequest.getTimestamp());
+            preparedStatement.setString(counter++, userRequest.getRequestType().toString());
+            preparedStatement.setString(counter++, userRequest.getRequestStatus().toString());
+            preparedStatement.setInt(counter++, userRequest.getActivityCategoryId());
+            preparedStatement.setInt(counter++, userRequest.getActivityId());
+            preparedStatement.setFloat(counter++, userRequest.getUserActivityDuration());
+            preparedStatement.setString(counter++, userRequest.getNewActivityName());
             preparedStatement.setString(counter++, userRequest.getComment());
-            preparedStatement.setLong(counter, userRequest.getUserRequestId());
+            preparedStatement.setInt(counter, userRequest.getUserRequestId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -125,22 +136,16 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
 
     private UserRequest createEntity(ResultSet resultSet) throws SQLException {
         UserRequest userRequest = new UserRequest();
-        userRequest.setUserRequestId(resultSet.getInt("id"));
-        userRequest.setUserId(resultSet.getInt("user_id"));
-        userRequest.setRequestType(RequestType.valueOf(resultSet.getString("request_type")));
-        userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString("request_status")));
-        userRequest.setActivityId(resultSet.getInt("activity_id"));
-        userRequest.setNewActivityName(resultSet.getString("new_activity_name"));
-        userRequest.setComment(resultSet.getString("comment"));
+        userRequest.setUserRequestId(resultSet.getInt(1));
+        userRequest.setTimestamp(resultSet.getTimestamp(2));
+        userRequest.setUserId(resultSet.getInt(3));
+        userRequest.setRequestType(RequestType.valueOf(resultSet.getString(4)));
+        userRequest.setRequestStatus(RequestStatus.valueOf(resultSet.getString(5)));
+        userRequest.setActivityCategoryId(resultSet.getInt(6));
+        userRequest.setActivityId(resultSet.getInt(7));
+        userRequest.setUserActivityDuration(resultSet.getFloat(8));
+        userRequest.setNewActivityName(resultSet.getString(9));
+        userRequest.setComment(resultSet.getString(10));
         return userRequest;
-    }
-
-    private int insertDataFromEntity(UserRequest userRequest, PreparedStatement preparedStatement, int i) throws SQLException {
-        preparedStatement.setInt(i++, userRequest.getUserId());
-        preparedStatement.setString(i++, userRequest.getRequestType().toString());
-        preparedStatement.setString(i++, userRequest.getRequestStatus().toString());
-        preparedStatement.setInt(i++, userRequest.getActivityId());
-        preparedStatement.setString(i++, userRequest.getNewActivityName());
-        return i;
     }
 }

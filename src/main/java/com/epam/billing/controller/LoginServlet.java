@@ -60,7 +60,6 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("user", user);
                     if (user.isAdmin()) {
 
-
                         req.getSession().setAttribute("userActivities",
                                 userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
                         req.getSession().setAttribute("listOfAllUsers", userService.getAll());

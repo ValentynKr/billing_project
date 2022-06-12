@@ -108,7 +108,7 @@ public class UserRepository extends AbstractRepository<User> {
             preparedStatement.setBoolean(counter++, user.isAdmin());
             preparedStatement.setString(counter++, user.getEmail());
             preparedStatement.setString(counter++, user.getPassword());
-            preparedStatement.setLong(counter, user.getUserId());
+            preparedStatement.setInt(counter, user.getUserId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
