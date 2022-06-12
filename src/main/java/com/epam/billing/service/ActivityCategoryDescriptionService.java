@@ -4,6 +4,7 @@ import com.epam.billing.entity.ActivityCategoryDescription;
 import com.epam.billing.repository.ActivityCategoryDescriptionRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ActivityCategoryDescriptionService {
 
@@ -15,6 +16,10 @@ public class ActivityCategoryDescriptionService {
 
     public List<ActivityCategoryDescription> getAll() {
         return activityCategoryDescriptionRepository.getAll();
+    }
+
+    public Optional<ActivityCategoryDescription> getByNameExceptId(int categoryId, String name) {
+        return activityCategoryDescriptionRepository.getByNameExceptId(categoryId, name);
     }
 
     public void save(ActivityCategoryDescription activityCategoryDescription) {

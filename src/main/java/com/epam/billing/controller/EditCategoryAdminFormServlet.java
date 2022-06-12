@@ -1,6 +1,8 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.ActivityCategory;
+import com.epam.billing.entity.ActivityCategoryDescription;
 import com.epam.billing.entity.ActivityCategoryStatus;
 import com.epam.billing.entity.Language;
 import com.epam.billing.facade.ActivityCategoryFacade;
@@ -41,29 +43,38 @@ public class EditCategoryAdminFormServlet extends HttpServlet {
         String newActivityCategoryStatus = req.getParameter("ActivityCategoryStatus");
         String newActivityCategoryNameEn = req.getParameter("newActivityCategoryNameEn");
         String newActivityCategoryNameRu = req.getParameter("newActivityCategoryNameRu");
-
-        ActivityCategory newActivityCategory = new ActivityCategory();
         String newCategoryActivityIdStr = req.getParameter("categoryId");
         int newCategoryActivityId = Integer.parseInt(newCategoryActivityIdStr);
 
-        newActivityCategory
-                .setCategoryId(newCategoryActivityId)
-                .setActivityCategoryStatus(ActivityCategoryStatus.valueOf(newActivityCategoryStatus));
+        if (activityCategoryDescriptionService.getByNameExceptId(newCategoryActivityId, newActivityCategoryNameEn).isPresent()) {
+            req.getSession().setAttribute("Alert", "Activity category with such english name already exists");
+            req.getRequestDispatcher("/jsp/categoryEditingForm.jsp").forward(req, resp);
+        } else {
+            if (activityCategoryDescriptionService.getByNameExceptId(newCategoryActivityId, newActivityCategoryNameRu).isPresent()) {
+                req.getSession().setAttribute("Alert", "Activity category with such russian name already exists");
+                req.getRequestDispatcher("/jsp/categoryEditingForm.jsp").forward(req, resp);
+            } else {
+                ActivityCategory newActivityCategory = new ActivityCategory();
 
-        List<String> activityCategoryDescriptions = new ArrayList<>();
-        activityCategoryDescriptions.add(newActivityCategoryNameEn);
-        activityCategoryDescriptions.add(newActivityCategoryNameRu);
+                newActivityCategory
+                        .setCategoryId(newCategoryActivityId)
+                        .setActivityCategoryStatus(ActivityCategoryStatus.valueOf(newActivityCategoryStatus));
 
-        ActivityCategoryFacade activityCategoryFacade = new ActivityCategoryFacade();
-        activityCategoryFacade.updateActivityCategoryWithDescription(newActivityCategory, activityCategoryDescriptions, activityCategoryService, activityCategoryDescriptionService);
+                List<String> activityCategoryDescriptions = new ArrayList<>();
+                activityCategoryDescriptions.add(newActivityCategoryNameEn);
+                activityCategoryDescriptions.add(newActivityCategoryNameRu);
 
-        req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
-        req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
-        req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
-        req.getSession().setAttribute("listOfOpenedActivityCategories", activityCategoryService.getOpenedWithLocalizedNames(language.getId()));
+                ActivityCategoryFacade activityCategoryFacade = new ActivityCategoryFacade();
+                activityCategoryFacade.updateActivityCategoryWithDescription(newActivityCategory, activityCategoryDescriptions, activityCategoryService, activityCategoryDescriptionService);
 
-        req.getRequestDispatcher("/jsp/editOrDeleteCategory.jsp").forward(req, resp);
+                req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
+                req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
+                req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
+                req.getSession().setAttribute("listOfOpenedActivityCategories", activityCategoryService.getOpenedWithLocalizedNames(language.getId()));
+
+                req.getRequestDispatcher("/jsp/editOrDeleteCategory.jsp").forward(req, resp);
+            }
+        }
     }
-
 }
 
