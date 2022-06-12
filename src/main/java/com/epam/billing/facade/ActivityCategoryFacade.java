@@ -26,4 +26,24 @@ public class ActivityCategoryFacade {
         activityCategoryDescriptionService.save(activityCategoryDescriptionEn);
         activityCategoryDescriptionService.save(activityCategoryDescriptionRu);
     }
+
+    public void updateActivityCategoryWithDescription(ActivityCategory activityCategory,
+                                                   List<String> activityCategoryDescriptionList,
+                                                   ActivityCategoryService activityCategoryService,
+                                                   ActivityCategoryDescriptionService activityCategoryDescriptionService) {
+
+        ActivityCategory newActivityCategory = activityCategoryService.update(activityCategory);
+        int newCategoryId = newActivityCategory.getCategoryId();
+        ActivityCategoryDescription activityCategoryDescriptionEn = new ActivityCategoryDescription()
+                .setCategoryId(newCategoryId)
+                .setLanguageId(1)
+                .setCategoryName(activityCategoryDescriptionList.get(0));
+        ActivityCategoryDescription activityCategoryDescriptionRu = new ActivityCategoryDescription()
+                .setCategoryId(newCategoryId)
+                .setLanguageId(2)
+                .setCategoryName(activityCategoryDescriptionList.get(1));
+        activityCategoryDescriptionService.update(activityCategoryDescriptionEn);
+        activityCategoryDescriptionService.update(activityCategoryDescriptionRu);
+    }
+
 }

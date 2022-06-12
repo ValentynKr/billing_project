@@ -52,9 +52,12 @@ public class AddCategoryAdmin extends HttpServlet {
                 activityCategoryDescriptions.add(newCategoryNameRu);
                 ActivityCategoryFacade activityCategoryFacade = new ActivityCategoryFacade();
                 activityCategoryFacade.addActivityCategoryWithDescription(newActivityCategory, activityCategoryDescriptions, activityCategoryService, activityCategoryDescriptionService);
-                req.getSession().setAttribute("Alert", "Activity added");
+                req.getSession().setAttribute("Alert", "Activity category added");
                 req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
+                req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
                 req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
+                req.getSession().setAttribute("listOfOpenedActivityCategories", activityCategoryService.getOpenedWithLocalizedNames(language.getId()));
+
             }
         }
         req.getRequestDispatcher("/jsp/addCategoryAdmin.jsp").forward(req, resp);

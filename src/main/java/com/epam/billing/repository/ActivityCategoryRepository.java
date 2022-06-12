@@ -30,7 +30,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             "FROM  activity_category\n" +
             "inner JOIN activity_category_description\n" +
             "on activity_category_description.category_id = activity_category.id\n" +
-            "where language_id = ?;";
+            "where language_id = ? order by activity_category_status, activity_category_description.name;";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM  activity_category WHERE id = ?";
     private static final String SELECT_ALL_WHERE_ID_LOCALIZED = "SELECT\n" +
             "activity_category.id, activity_category_description.name, activity_category.activity_category_status\n" +
@@ -38,6 +38,12 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             "inner JOIN activity_category_description\n" +
             "on activity_category_description.category_id = activity_category.id\n" +
             "where id = ? and language_id = ?;";
+    private static final String SELECT_ALL_WHERE_ID_WITH_DESCRIPTIONS = "SELECT\n" +
+            "activity_category.id, activity_category_description.name, activity_category.activity_category_status\n" +
+            "FROM  activity_category\n" +
+            "inner JOIN activity_category_description\n" +
+            "on activity_category_description.category_id = activity_category.id\n" +
+            "where id = ?;";
     private static final String SELECT_ALL_WHERE_NAME = "SELECT\n" +
             "activity_category.id, activity_category_description.name, activity_category.activity_category_status\n" +
             "FROM  activity_category\n" +
@@ -48,8 +54,7 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
             "FROM activity_category WHERE id = ?)";
     private static final String INSERT = "INSERT INTO activity_category VALUES (DEFAULT, ?)";
     private static final String DELETE = "DELETE FROM activity_category WHERE id = ?";
-    private static final String UPDATE = "UPDATE activity_category SET activity_category_status=? " +
-            "WHERE id=?";
+    private static final String UPDATE = "UPDATE activity_category SET activity_category_status=? WHERE id=?";
 
     @Override
     public List<ActivityCategory> getAll() {
@@ -160,6 +165,25 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         return activityCategoryIdLocalizedNameStatusDTO;
     }
 
+    public List<ActivityCategoryIdLocalizedNameStatusDTO> getByIdWithDescriptions(int categoryId) {
+        List<ActivityCategoryIdLocalizedNameStatusDTO> activityCategoryIdLocalizedNameStatusDTOList = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID_WITH_DESCRIPTIONS)) {
+            preparedStatement.setInt(1, categoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryId(resultSet.getInt(1));
+                activityCategoryIdLocalizedNameStatusDTO.setCategoryName(resultSet.getString(2));
+                activityCategoryIdLocalizedNameStatusDTO.setActivityCategoryStatus(ActivityCategoryStatus.valueOf(resultSet.getString(3)));
+                activityCategoryIdLocalizedNameStatusDTOList.add(activityCategoryIdLocalizedNameStatusDTO);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activityCategoryIdLocalizedNameStatusDTOList;
+    }
+
     public ActivityCategoryIdLocalizedNameStatusDTO getByNameNotSafe(String name, int languageId) {
         ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = new ActivityCategoryIdLocalizedNameStatusDTO();
         try (Connection connection = getConnection();
@@ -222,8 +246,8 @@ public class ActivityCategoryRepository extends AbstractRepository<ActivityCateg
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
-            preparedStatement.setInt(counter++, activityCategory.getCategoryId());
-            preparedStatement.setString(counter, activityCategory.getActivityCategoryStatus().toString());
+            preparedStatement.setString(counter++, activityCategory.getActivityCategoryStatus().toString());
+            preparedStatement.setInt(counter, activityCategory.getCategoryId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();

@@ -32,6 +32,10 @@ public class ActivityCategoryService {
         return activityCategoryRepository.getAllWithLocalizedNameStatusDTO(languageId);
     }
 
+    public List<ActivityCategoryIdLocalizedNameStatusDTO> getByIdWithDescriptions(int categoryId) {
+        return activityCategoryRepository.getByIdWithDescriptions(categoryId);
+    }
+
     public ActivityCategory save(ActivityCategory activityCategory) {
         return activityCategoryRepository.save(activityCategory);
     }

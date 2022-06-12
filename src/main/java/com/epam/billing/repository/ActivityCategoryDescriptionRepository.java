@@ -14,7 +14,7 @@ public class ActivityCategoryDescriptionRepository extends AbstractRepository<Ac
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity_category_description WHERE category_id = ?";
     private static final String INSERT = "INSERT INTO activity_category_description VALUES (?, ?, ?)";
     private static final String DELETE = "DELETE FROM activity_category_description WHERE category_id = ?";
-    private static final String UPDATE = "UPDATE activity_category_description SET category_id=?, language_id=?, name=?";
+    private static final String UPDATE = "UPDATE activity_category_description SET name=? WHERE category_id=? AND language_id=?";
 
     @Override
     public List<ActivityCategoryDescription> getAll() {
@@ -73,15 +73,16 @@ public class ActivityCategoryDescriptionRepository extends AbstractRepository<Ac
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
+            preparedStatement.setString(counter++, activityCategoryDescription.getCategoryName());
             preparedStatement.setInt(counter++, activityCategoryDescription.getCategoryId());
-            preparedStatement.setInt(counter++, activityCategoryDescription.getLanguageId());
-            preparedStatement.setString(counter, activityCategoryDescription.getCategoryName());
+            preparedStatement.setInt(counter, activityCategoryDescription.getLanguageId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return activityCategoryDescription;
     }
+
 
     @Override
     public boolean delete(ActivityCategoryDescription activityCategoryDescription) {
