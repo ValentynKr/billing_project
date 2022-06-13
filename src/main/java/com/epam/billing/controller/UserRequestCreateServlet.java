@@ -40,6 +40,9 @@ public class UserRequestCreateServlet extends HttpServlet {
         ActivityCategoryIdLocalizedNameStatusDTO activityCategoryIdLocalizedNameStatusDTO = activityCategoryService.getByNameNotSafe(activityCategoryName, language.getId());
         int activityCategoryId = activityCategoryIdLocalizedNameStatusDTO.getCategoryId();
         UserRequest userRequest = new UserRequest();
+        if (commentForAdmin.isEmpty()) {
+            commentForAdmin = null;
+        }
         userRequest
                 .setUserId(user.getUserId())
                 .setRequestType(RequestType.CREATE)

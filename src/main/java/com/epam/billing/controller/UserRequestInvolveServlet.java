@@ -36,6 +36,9 @@ public class UserRequestInvolveServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
         Activity activity = activityService.getById(activityId);
         UserRequest userRequest = new UserRequest();
+        if (commentForAdmin.isEmpty()) {
+            commentForAdmin = null;
+        }
         userRequest
                 .setUserId(user.getUserId())
                 .setRequestType(RequestType.INVOLVE)
