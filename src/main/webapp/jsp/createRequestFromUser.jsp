@@ -19,8 +19,6 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary btn-lg active" role="button"
-   aria-pressed="true"><fmt:message key="button.logout"/></a>
 <a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button"
    aria-pressed="true"><fmt:message
         key="button.back"/></a>

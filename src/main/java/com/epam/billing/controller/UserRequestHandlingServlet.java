@@ -1,6 +1,7 @@
 package com.epam.billing.controller;
 
 import com.epam.billing.entity.Language;
+import com.epam.billing.service.ActivityCategoryService;
 import com.epam.billing.service.ActivityService;
 import com.epam.billing.service.LanguageService;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 public class UserRequestHandlingServlet extends HttpServlet {
     private ActivityService activityService;
     private LanguageService languageService;
-
+    private ActivityCategoryService activityCategoryService;
     private Map<String, String> typeOfRequestToJspPath;
 
     @Override
@@ -25,6 +26,8 @@ public class UserRequestHandlingServlet extends HttpServlet {
         initRequestTypePathMap();
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
+        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
+
     }
 
     private void initRequestTypePathMap() {
@@ -43,6 +46,9 @@ public class UserRequestHandlingServlet extends HttpServlet {
         String path = typeOfRequestToJspPath.get(typeOfRequest);
         if (typeOfRequest.equals("INVOLVE")) {
             req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
+        }
+        if (typeOfRequest.equals("CREATE")) {
+            req.getSession().setAttribute("listOfAllActivityCategories", activityCategoryService.getAllWithLocalizedNames(language.getId()));
         }
         req.getRequestDispatcher(path).forward(req, resp);
     }

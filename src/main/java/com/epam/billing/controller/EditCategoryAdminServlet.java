@@ -1,11 +1,7 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
 import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
-import com.epam.billing.entity.Activity;
-import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.service.*;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,16 +12,11 @@ import java.util.List;
 
 @WebServlet(urlPatterns = {"/editCategoryAdmin"})
 public class EditCategoryAdminServlet extends HttpServlet {
-    private LanguageService languageService;
-    private ActivityService activityService;
-    private UserActivityService userActivityService;
+
     private ActivityCategoryService activityCategoryService;
 
     @Override
     public void init() {
-        languageService = (LanguageService) getServletContext().getAttribute("languageService");
-        activityService = (ActivityService) getServletContext().getAttribute("activityService");
-        userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
 
     }

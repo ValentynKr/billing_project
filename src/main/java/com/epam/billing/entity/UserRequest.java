@@ -11,9 +11,18 @@ public class UserRequest {
     private RequestStatus requestStatus;
     private int activityCategoryId;
     private int activityId;
-    private Float userActivityDuration;
+    private float userActivityDuration;
     private String newActivityName;
     private String comment;
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public UserRequest setActivityId(int activityId) {
+        this.activityId = activityId;
+        return this;
+    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -94,14 +103,6 @@ public class UserRequest {
         return this;
     }
 
-    public int getActivityId() {
-        return activityId;
-    }
-
-    public UserRequest setActivityId(int activityId) {
-        this.activityId = activityId;
-        return this;
-    }
 
     public String getNewActivityName() {
         return newActivityName;

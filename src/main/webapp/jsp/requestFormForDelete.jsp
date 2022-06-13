@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
+<a href="${pageContext.request.contextPath}/jsp/createRequestFromUser.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
         key="button.back"/></a>
 
 <div class="container">
@@ -28,9 +28,6 @@
     </div>
 </div>
 <hr>
-
-
-
 
 <div class="container">
     <div class="col-md-7">
