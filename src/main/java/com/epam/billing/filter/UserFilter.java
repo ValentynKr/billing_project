@@ -20,7 +20,9 @@ public class UserFilter implements Filter {
             "/billing_project/login.jsp",
             "/billing_project/login",
             "/billing_project/jsp/registration.jsp",
-            "/billing_project/registration");
+            "/billing_project/registration",
+            "/billing_project/css/signin.css",
+            "/billing_project/css/bootstrap.min.css");
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

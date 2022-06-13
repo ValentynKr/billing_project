@@ -21,7 +21,8 @@
 
 <a href="${pageContext.request.contextPath}/logout" class="btn btn-secondary btn-lg active" role="button"
    aria-pressed="true"><fmt:message key="button.logout"/></a>
-<a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
+<a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button"
+   aria-pressed="true"><fmt:message
         key="button.back"/></a>
 
 <div class="container">
@@ -32,7 +33,8 @@
 <hr>
 <div class="container">
     <div class="col-md-7">
-        <form class="form-control" action="${pageContext.request.contextPath}/userRequestHandlingServlet" method="post">
+        <form class="form-signin" action="${pageContext.request.contextPath}/userRequestHandlingServlet" method="post">
+
             <label for="typeOfRequest"><fmt:message key="label.requestType"/></label>
             <select class="form-control" name="typeOfRequest" id="typeOfRequest">
                 <option value="CREATE">CREATE</option>
@@ -40,7 +42,8 @@
                 <option value="DELETE">DELETE</option>
                 <option value="EDIT">EDIT</option>
             </select>
-            <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
+            <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message
+                    key="button.submit"/></button>
         </form>
     </div>
 </div>

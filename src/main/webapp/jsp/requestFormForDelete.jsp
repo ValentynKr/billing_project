@@ -34,18 +34,22 @@
 
 <div class="container">
     <div class="col-md-7">
-        <form class="orm-control" action="${pageContext.request.contextPath}/userRequestDeleteServlet" method="post">
+        <form class="form-signing" action="${pageContext.request.contextPath}/userRequestDeleteServlet" method="post">
+
             <label for="activityNameForRequest"><fmt:message key="userActivity.activityName"/></label>
             <select class="form-control" name="activityNameForRequest" id="activityNameForRequest">
                 <c:forEach var="userActivity" items="${sessionScope.userActivities}">
                     <option>${userActivity.activityName}</option>
                 </c:forEach>
             </select>
+
             <label for="commentForAdmin"><fmt:message key="label.comment"/></label>
             <input type="text" class="form-control" name="commentForAdmin" id="commentForAdmin"
                    placeholder="<fmt:message key="placeholder.comment"/>" required>
+
             <button class="btn btn-lg btn-default btn-block" type="submit"><fmt:message key="button.submit"/></button>
         </form>
+
         <c:if test="${not empty sessionScope.Alert}">
             <div class="row">
                 <div class="col-md-4 col-md-offset-4">
