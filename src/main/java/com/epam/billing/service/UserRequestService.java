@@ -1,5 +1,6 @@
 package com.epam.billing.service;
 
+import com.epam.billing.dto.DateStatusTypeUserRequestDTO;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.entity.UserRequest;
 import com.epam.billing.repository.ActivityRepository;
@@ -17,6 +18,10 @@ public class UserRequestService {
 
     public List<UserRequest> getAll() {
         return userRequestRepository.getAll();
+    }
+
+    public List<DateStatusTypeUserRequestDTO> getAllWithUserNames() {
+        return userRequestRepository.getAllWithUserNames();
     }
 
     public void save(UserRequest userRequest) {

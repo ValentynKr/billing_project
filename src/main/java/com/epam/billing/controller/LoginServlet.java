@@ -23,6 +23,7 @@ public class LoginServlet extends HttpServlet {
     private LanguageService languageService;
     private ActivityCategoryService activityCategoryService;
     private ActivityService activityService;
+    private UserRequestService userRequestService;
 
     @Override
     public void init() {
@@ -31,6 +32,7 @@ public class LoginServlet extends HttpServlet {
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
+        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
     }
 
 
@@ -68,6 +70,7 @@ public class LoginServlet extends HttpServlet {
                         req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
                         req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
                         req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
+                        req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
 
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {

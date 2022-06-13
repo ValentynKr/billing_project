@@ -1,5 +1,6 @@
 package com.epam.billing.repository;
 
+import com.epam.billing.dto.DateStatusTypeUserRequestDTO;
 import com.epam.billing.entity.RequestStatus;
 import com.epam.billing.entity.RequestType;
 import com.epam.billing.entity.UserRequest;
@@ -10,6 +11,11 @@ import java.util.List;
 public class UserRequestRepository extends AbstractRepository<UserRequest> {
 
     private static final String SELECT_ALL = "SELECT * FROM user_request";
+    private static final String SELECT_ALL_WITH_NAMES = "SELECT\n" +
+            "user_request.id, user_request.request_date, user_request.request_status, user_request.request_type, users.name  \n" +
+            "FROM  user_request\n" +
+            "inner JOIN users\n" +
+            "on user_request.user_id = users.id order by request_status DESC, request_date";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -32,6 +38,26 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             throwables.printStackTrace();
         }
         return userRequestList;
+    }
+
+    public List<DateStatusTypeUserRequestDTO> getAllWithUserNames() {
+        List<DateStatusTypeUserRequestDTO> dateStatusTypeUserRequestDTOList = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WITH_NAMES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                DateStatusTypeUserRequestDTO dateStatusTypeUserRequestDTO = new DateStatusTypeUserRequestDTO();
+                dateStatusTypeUserRequestDTO.setRequestId(resultSet.getInt(1));
+                dateStatusTypeUserRequestDTO.setTimestamp(resultSet.getTimestamp(2));
+                dateStatusTypeUserRequestDTO.setRequestStatus(RequestStatus.valueOf(resultSet.getString(3)));
+                dateStatusTypeUserRequestDTO.setRequestType(RequestType.valueOf(resultSet.getString(4)));
+                dateStatusTypeUserRequestDTO.setUserName(resultSet.getString(5));
+                dateStatusTypeUserRequestDTOList.add(dateStatusTypeUserRequestDTO);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return dateStatusTypeUserRequestDTOList;
     }
 
     @Override
@@ -91,8 +117,8 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             int counter = 1;
-            preparedStatement.setInt(counter++, userRequest.getUserId());
             preparedStatement.setTimestamp(counter++, userRequest.getTimestamp());
+            preparedStatement.setInt(counter++, userRequest.getUserId());
             preparedStatement.setString(counter++, userRequest.getRequestType().toString());
             preparedStatement.setString(counter++, userRequest.getRequestStatus().toString());
             preparedStatement.setInt(counter++, userRequest.getActivityCategoryId());

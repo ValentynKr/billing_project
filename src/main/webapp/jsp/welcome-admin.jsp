@@ -27,6 +27,7 @@
 <a href="${pageContext.request.contextPath}/jsp/editOrDeleteActivity.jsp" class="btn btn-primary" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteActivity"/></a>
 <a href="${pageContext.request.contextPath}/jsp/addCategoryAdmin.jsp" class="btn btn-info" role="button" aria-pressed="true"><fmt:message key="addCategoryOfActivity.button"/></a>
 <a href="${pageContext.request.contextPath}/jsp/editOrDeleteCategory.jsp" class="btn btn-info" role="button" aria-pressed="true"><fmt:message key="button.editOrDeleteCategory"/></a>
+<a href="${pageContext.request.contextPath}/jsp/userRequestsAdmin.jsp" class="btn btn-danger" role="button" aria-pressed="true"><fmt:message key="button.userRequests"/></a>
 
 
 <div class="container">

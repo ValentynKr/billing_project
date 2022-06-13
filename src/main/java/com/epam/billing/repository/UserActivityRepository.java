@@ -20,6 +20,18 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String DELETE = "DELETE FROM user_activities WHERE id = ?";
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
             "WHERE id=?";
+    private static final String GET_USER_ACTIVITY_NAMED = "SELECT\n" +
+            "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
+            "FROM  user_activities\n" +
+            "inner JOIN activity\n" +
+            "on user_activities.activity_id = activity.id\n" +
+            "inner join users\n" +
+            "on user_activities.user_id = users.id\n" +
+            "inner join activity_category\n" +
+            "on activity.category_id = activity_category.id\n" +
+            "inner join activity_category_description\n" +
+            "on activity_category.id = activity_category_description.category_id\n" +
+            "where user_activities.id=? and language_id =?";
 
     private static final String JOIN_USER_NAME = "SELECT\n" +
             "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
@@ -215,6 +227,27 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             throwables.printStackTrace();
         }
         return userActivityUserNameIdDurationRecordingDTOS;
+    }
+
+    public UserActivityUserNameIdDurationRecordingDTO getByIdUserActivityUserNameIdDurationDTO(int userActivityId, int languageId) {
+        UserActivityUserNameIdDurationRecordingDTO userActivityUserNameIdDurationRecordingDTO = new
+                UserActivityUserNameIdDurationRecordingDTO();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_ACTIVITY_NAMED)) {
+            preparedStatement.setInt(1, userActivityId);
+            preparedStatement.setInt(2, languageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                userActivityUserNameIdDurationRecordingDTO = new UserActivityUserNameIdDurationRecordingDTO();
+                userActivityUserNameIdDurationRecordingDTO.setActivityCategoryName(resultSet.getString(1));
+                userActivityUserNameIdDurationRecordingDTO.setActivityName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecordingDTO.setUserName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecordingDTO.setActivityDuration(resultSet.getFloat(4));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userActivityUserNameIdDurationRecordingDTO;
     }
 
     public List<UserActivityUserNameIdDurationRecordingDTO> getAllUserActivitiesDurationDTO(int languageId) {
