@@ -21,7 +21,7 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
     private static final String UPDATE = "UPDATE user_activities SET activity_id=?, user_id=?, duration=?" +
             "WHERE id=?";
     private static final String GET_USER_ACTIVITY_NAMED = "SELECT\n" +
-            "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
+            "user_activities.id, activity_category_description.name, activity.name, users.name , user_activities.duration\n" +
             "FROM  user_activities\n" +
             "inner JOIN activity\n" +
             "on user_activities.activity_id = activity.id\n" +
@@ -238,10 +238,11 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userActivityUserNameIdDurationRecordingDTO = new UserActivityUserNameIdDurationRecordingDTO();
-                userActivityUserNameIdDurationRecordingDTO.setActivityCategoryName(resultSet.getString(1));
-                userActivityUserNameIdDurationRecordingDTO.setActivityName(resultSet.getString(2));
-                userActivityUserNameIdDurationRecordingDTO.setUserName(resultSet.getString(3));
-                userActivityUserNameIdDurationRecordingDTO.setActivityDuration(resultSet.getFloat(4));
+                userActivityUserNameIdDurationRecordingDTO.setUserActivityId(resultSet.getInt(1));
+                userActivityUserNameIdDurationRecordingDTO.setActivityCategoryName(resultSet.getString(2));
+                userActivityUserNameIdDurationRecordingDTO.setActivityName(resultSet.getString(3));
+                userActivityUserNameIdDurationRecordingDTO.setUserName(resultSet.getString(4));
+                userActivityUserNameIdDurationRecordingDTO.setActivityDuration(resultSet.getFloat(5));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

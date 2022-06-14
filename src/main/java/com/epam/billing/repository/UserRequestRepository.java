@@ -14,8 +14,9 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     private static final String SELECT_ALL_WITH_NAMES = "SELECT\n" +
             "user_request.id, user_request.request_date, user_request.request_status, user_request.request_type, users.name  \n" +
             "FROM  user_request\n" +
-            "inner JOIN users\n" +
-            "on user_request.user_id = users.id order by request_status DESC, request_date";
+            "INNER JOIN users\n" +
+            "ON user_request.user_id = users.id \n" +
+            "ORDER BY CASE WHEN request_status = 'UNRESOLVED' THEN 0 ELSE 1 END, request_date DESC";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
     private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";

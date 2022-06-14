@@ -1,12 +1,8 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.*;
-import com.epam.billing.service.ActivityCategoryService;
 import com.epam.billing.service.ActivityService;
-import com.epam.billing.service.LanguageService;
 import com.epam.billing.service.UserRequestService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,12 +16,10 @@ public class UserRequestInvolveServlet extends HttpServlet {
     private ActivityService activityService;
     private UserRequestService userRequestService;
 
-
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
-
     }
 
     @Override
@@ -36,9 +30,6 @@ public class UserRequestInvolveServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
         Activity activity = activityService.getById(activityId);
         UserRequest userRequest = new UserRequest();
-        if (commentForAdmin.isEmpty()) {
-            commentForAdmin = null;
-        }
         userRequest
                 .setUserId(user.getUserId())
                 .setRequestType(RequestType.INVOLVE)
@@ -51,6 +42,5 @@ public class UserRequestInvolveServlet extends HttpServlet {
         userRequestService.save(userRequest);
         req.getSession().setAttribute("Alert", "Your request was sent to administrator. Please, wait for approving");
         req.getRequestDispatcher("/jsp/requestFormForInvolve.jsp").forward(req, resp);
-
     }
 }

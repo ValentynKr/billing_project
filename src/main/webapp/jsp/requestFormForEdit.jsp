@@ -57,7 +57,7 @@
 
 
                                 <input type="text" class="form-group-sm" name="commentForAdmin"
-                                       placeholder="<fmt:message key="label.comment"/>">
+                                       placeholder="<fmt:message key="label.comment"/>" required>
 
                             <input type="hidden" name="userActivityName" value="${userActivity.activityName}">
                             <button class="btn btn-xs btn-default" type="submit"><fmt:message

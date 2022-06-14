@@ -27,9 +27,6 @@ public class UserRequestDeleteServlet extends HttpServlet {
         Activity activity = activityService.getByNameNotSafe(activityNameForRequest);
         UserRequest userRequest = new UserRequest();
         User user = (User) req.getSession().getAttribute("user");
-        if (commentForAdmin.isEmpty()) {
-            commentForAdmin = null;
-        }
         userRequest
                 .setUserId(user.getUserId())
                 .setRequestType(RequestType.DELETE)

@@ -15,19 +15,12 @@ public class UserRequestAcceptServlet extends HttpServlet {
     private ActivityService activityService;
     private UserRequestService userRequestService;
     private UserActivityService userActivityService;
-    private UserService userService;
-    private ActivityCategoryService activityCategoryService;
-
-
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
-        userService = (UserService) getServletContext().getAttribute("userService");
-        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
-
     }
 
     @Override
@@ -39,7 +32,7 @@ public class UserRequestAcceptServlet extends HttpServlet {
             editActivityOrUserActivity(req);
         }
         if ((userRequest.getRequestType().toString()).equals("DELETE")) {
-            deleteUserActivity(req, userRequest);
+            deleteUserActivity(req);
         }
         if ((userRequest.getRequestType().toString()).equals("INVOLVE")) {
             createUserActivity(userRequest);
@@ -53,8 +46,9 @@ public class UserRequestAcceptServlet extends HttpServlet {
         resp.sendRedirect("/billing_project/jsp/userRequestsAdmin.jsp");
     }
 
-    private void deleteUserActivity(HttpServletRequest req, UserRequest userRequest) {
-        UserActivity oldUserActivity = (UserActivity) req.getSession().getAttribute("oldUserActivityWithId");
+    private void deleteUserActivity(HttpServletRequest req) {
+        UserActivityUserNameIdDurationRecordingDTO oldUserActivityDTO  = (UserActivityUserNameIdDurationRecordingDTO) req.getSession().getAttribute("oldUserActivity");
+        UserActivity oldUserActivity = userActivityService.getById(oldUserActivityDTO.getUserActivityId());
         userActivityService.delete(oldUserActivity);
     }
 
@@ -85,7 +79,8 @@ public class UserRequestAcceptServlet extends HttpServlet {
     }
 
     private void editActivityOrUserActivity(HttpServletRequest req) {
-        UserActivity oldUserActivity = (UserActivity) req.getSession().getAttribute("oldUserActivityWithId");
+        UserActivityUserNameIdDurationRecordingDTO oldUserActivityDTO  = (UserActivityUserNameIdDurationRecordingDTO) req.getSession().getAttribute("oldUserActivity");
+        UserActivity oldUserActivity = userActivityService.getById(oldUserActivityDTO.getUserActivityId());
         String newActivityName = req.getParameter("newActivityName");
         float newUserActivityDuration = Float.parseFloat(req.getParameter("newUserActivityDuration"));
 

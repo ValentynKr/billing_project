@@ -19,9 +19,6 @@ public class UserRequestInfoServlet extends HttpServlet {
     private ActivityCategoryDescriptionService activityCategoryDescriptionService;
     private UserService userService;
 
-
-
-
     @Override
     public void init() {
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
@@ -30,7 +27,6 @@ public class UserRequestInfoServlet extends HttpServlet {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         activityCategoryDescriptionService = (ActivityCategoryDescriptionService) getServletContext().getAttribute("activityCategoryDescriptionService");
         userService = (UserService) getServletContext().getAttribute("userService");
-
     }
 
     @Override
@@ -54,7 +50,6 @@ public class UserRequestInfoServlet extends HttpServlet {
         UserActivity oldUserActivity = userActivityService.getByActivityIdAndUserId(userRequest.getActivityId(), userRequest.getUserId());
         UserActivityUserNameIdDurationRecordingDTO oldUserActivityDTO = userActivityService.getByIdUserActivityUserNameIdDurationDTO(oldUserActivity.getUserActivityId(), language.getId());
         req.getSession().setAttribute("oldUserActivity", oldUserActivityDTO);
-        req.getSession().setAttribute("oldUserActivityWithId", oldUserActivity);
 
         // get ActivityCategory description for INVOLVE or CREATE request
         Activity activity = activityService.getById(userRequest.getActivityId());

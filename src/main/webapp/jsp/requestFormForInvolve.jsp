@@ -39,14 +39,14 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="activityList" items="${sessionScope.listOfAllActivitiesWithLocalizedCategories}">
+            <c:forEach var="activityList" items="${sessionScope.listOfAllLocalizedActivitiesButUsers}">
                 <tr>
-                    <td>${activityList.activityName}</td>
                     <td>${activityList.activityCategoryLocalizedName}</td>
+                    <td>${activityList.activityName}</td>
                     <td>
                         <form class="form-group" action="${pageContext.request.contextPath}/userRequestInvolveServlet"
                               method="post">
-                            <input type="text" class="form" name="commentForAdmin" placeholder="<fmt:message key="label.comment"/>">
+                            <input type="text" class="form" name="commentForAdmin" placeholder="<fmt:message key="label.comment"/>" required>
                             <input type="hidden" name="activityId" value="${activityList.activityId}">
                             <button class="btn btn-xs btn-default" type="submit"><fmt:message
                                     key="button.involve"/></button>
