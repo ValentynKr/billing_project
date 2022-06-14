@@ -100,7 +100,6 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             int i = 1;
-            preparedStatement.setInt(i++, userActivity.getUserActivityId());
             preparedStatement.setInt(i++, userActivity.getActivityId());
             preparedStatement.setInt(i++, userActivity.getUserId());
             preparedStatement.setFloat(i, userActivity.getDurationOfActivity());

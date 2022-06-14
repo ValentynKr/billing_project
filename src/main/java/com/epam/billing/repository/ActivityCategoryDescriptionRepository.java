@@ -13,6 +13,7 @@ public class ActivityCategoryDescriptionRepository extends AbstractRepository<Ac
 
     private static final String SELECT_ALL = "SELECT * FROM activity_category_description";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity_category_description WHERE category_id = ?";
+    private static final String SELECT_ALL_WHERE_ID_LOCALIZED = "SELECT * FROM activity_category_description WHERE category_id = ? AND language_id=?";
     private static final String SELECT_BY_NAME_EXCEPT_ID = "SELECT * FROM activity_category_description WHERE category_id != ? AND name =?";
     private static final String INSERT = "INSERT INTO activity_category_description VALUES (?, ?, ?)";
     private static final String DELETE = "DELETE FROM activity_category_description WHERE category_id = ?";
@@ -63,6 +64,24 @@ public class ActivityCategoryDescriptionRepository extends AbstractRepository<Ac
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID)) {
             preparedStatement.setInt(1, categoryId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                activityCategoryDescription.setCategoryId(resultSet.getInt(1));
+                activityCategoryDescription.setLanguageId(resultSet.getInt(2));
+                activityCategoryDescription.setCategoryName(resultSet.getString(3));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activityCategoryDescription;
+    }
+
+    public ActivityCategoryDescription getByIdLocalized(int categoryId, int languageId) {
+        ActivityCategoryDescription activityCategoryDescription = new ActivityCategoryDescription();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_ID_LOCALIZED)) {
+            preparedStatement.setInt(1, categoryId);
+            preparedStatement.setInt(2, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 activityCategoryDescription.setCategoryId(resultSet.getInt(1));

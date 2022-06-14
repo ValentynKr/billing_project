@@ -21,12 +21,10 @@ public class UserRequestDeclineServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        int userRequestId = Integer.parseInt(req.getParameter("userRequestId"));
-        UserRequest request = userRequestService.getById(userRequestId);
-        request.setRequestStatus(RequestStatus.CANCELED);
-        userRequestService.update(request);
+        UserRequest userRequest = ((UserRequest) req.getSession().getAttribute("userRequest"));
+        userRequest.setRequestStatus(RequestStatus.CANCELED);
+        userRequestService.update(userRequest);
         req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
         resp.sendRedirect("/billing_project/jsp/userRequestsAdmin.jsp");
-
     }
 }

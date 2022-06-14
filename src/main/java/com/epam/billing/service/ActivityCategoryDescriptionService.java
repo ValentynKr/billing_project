@@ -38,6 +38,10 @@ public class ActivityCategoryDescriptionService {
         return activityCategoryDescriptionRepository.getById(id);
     }
 
+    public ActivityCategoryDescription getByIdLocalized(int categoryId, int languageId) {
+        return activityCategoryDescriptionRepository.getByIdLocalized(categoryId,languageId);
+    }
+
     public ActivityCategoryDescription update(ActivityCategoryDescription activityCategoryDescription) {
         return activityCategoryDescriptionRepository.update(activityCategoryDescription);
     }

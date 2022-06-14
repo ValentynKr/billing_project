@@ -40,12 +40,16 @@
             <div class="col-sm-3">${sessionScope.userRequest.requestType}</div>
         </div>
         <div class="row">
+            <div class="col-sm-3"><p><strong><fmt:message key="userRequest.creationDate"/></strong></p></div>
+            <div class="col-sm-3">${sessionScope.userRequest.timestamp}</div>
+        </div>
+        <div class="row">
             <div class="col-sm-3"><p><strong><fmt:message key="placeholder.username"/></strong></p></div>
             <div class="col-sm-3">${sessionScope.oldUserActivity.userName}</div>
         </div>
         <div class="row">
-            <div class="col-sm-3"><p><strong><fmt:message key="userRequest.creationDate"/></strong></p></div>
-            <div class="col-sm-3">${sessionScope.userRequest.timestamp}</div>
+            <div class="col-sm-3"><p><strong><fmt:message key="placeholder.comment"/></strong></p></div>
+            <div class="col-sm-3">${sessionScope.userRequest.comment}</div>
         </div>
         <c:if test="${sessionScope.userRequestIsAcceptable}">
             <div class="row">
