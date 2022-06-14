@@ -12,20 +12,29 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/userRequestAcceptServlet"})
 public class UserRequestAcceptServlet extends HttpServlet {
-    private ActivityService activityService;
+    private LanguageService languageService;
     private UserRequestService userRequestService;
     private UserActivityService userActivityService;
+    private ActivityService activityService;
+    private UserService userService;
+    private ActivityCategoryService activityCategoryService;
+
+
 
     @Override
     public void init() {
-        activityService = (ActivityService) getServletContext().getAttribute("activityService");
+        languageService = (LanguageService) getServletContext().getAttribute("languageService");
         userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
         userActivityService = (UserActivityService) getServletContext().getAttribute("userActivityService");
+        activityService = (ActivityService) getServletContext().getAttribute("activityService");
+        userService = (UserService) getServletContext().getAttribute("userService");
+        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         UserRequest userRequest = ((UserRequest) req.getSession().getAttribute("userRequest"));
 
         if ((userRequest.getRequestType().toString()).equals("EDIT")) {
@@ -42,6 +51,14 @@ public class UserRequestAcceptServlet extends HttpServlet {
         }
         userRequest.setRequestStatus(RequestStatus.RESOLVED);
         userRequestService.update(userRequest);
+        req.getSession().setAttribute("userActivities",
+                userActivityService.getAllUserActivitiesDurationDTO(language.getId()));
+        req.getSession().setAttribute("listOfAllUsers", userService.getAll());
+        req.getSession().setAttribute("listOfOpenedActivityCategories", activityCategoryService.getOpenedWithLocalizedNames(language.getId()));
+        req.getSession().setAttribute("listOfAllActivityCategories", activityCategoryService.getAllWithLocalizedNames(language.getId()));
+        req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
+        req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
+        req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
         req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
         resp.sendRedirect("/billing_project/jsp/userRequestsAdmin.jsp");
     }
