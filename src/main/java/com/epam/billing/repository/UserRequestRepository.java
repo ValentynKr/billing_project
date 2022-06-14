@@ -18,6 +18,7 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             "ON user_request.user_id = users.id \n" +
             "ORDER BY CASE WHEN request_status = 'UNRESOLVED' THEN 0 ELSE 1 END, request_date DESC";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM user_request WHERE id = ?";
+    private static final String SELECT_UNRESOLVED_EDIT_REQUESTS = "SELECT * FROM user_request WHERE user_id = ? AND activity_id = ? AND request_type = 'EDIT' AND request_status = 'UNRESOLVED'";
     private static final String EXIST_BY_ID = "SELECT * FROM user_request WHERE EXISTS(SELECT * FROM user_request WHERE id = ?)";
     private static final String INSERT = "INSERT INTO user_request VALUES (DEFAULT, DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM user_request WHERE id = ?";
@@ -39,6 +40,22 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             throwables.printStackTrace();
         }
         return userRequestList;
+    }
+
+    public boolean areUnresolvedEditRequestsPresent(int userId, int activityId) {
+        boolean isPresent = false;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_UNRESOLVED_EDIT_REQUESTS)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, activityId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.isBeforeFirst()) {
+                isPresent = true;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return isPresent;
     }
 
     public List<DateStatusTypeUserRequestDTO> getAllWithUserNames() {

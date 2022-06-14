@@ -86,6 +86,9 @@
                         <c:when test="${(sessionScope.userRequest.requestType.toString()).equals('DELETE')}">
                             <th><fmt:message key="userActivity.activityName"/></th>
                             <th><fmt:message key="userActivity.durationOfActivity"/></th>
+                            <c:if test="${sessionScope.unpredictedDeletionFlag}">
+                                <th><fmt:message key="label.restricts"/></th>
+                            </c:if>
                         </c:when>
                         <c:when test="${(sessionScope.userRequest.requestType.toString()).equals('CREATE')}">
                             <th><fmt:message key="label.newActivityName"/></th>
@@ -104,6 +107,9 @@
                             <td>${sessionScope.oldUserActivity.activityCategoryName}</td>
                             <td>${sessionScope.oldUserActivity.activityName}</td>
                             <td>${sessionScope.oldUserActivity.activityDuration}</td>
+                            <c:if test="${sessionScope.unpredictedDeletionFlag}">
+                                <td><p class="text-danger"><strong><fmt:message key="label.unhandledEditBeforeDelete"/></strong></p></td>
+                            </c:if>
                         </c:when>
                         <c:when test="${(sessionScope.userRequest.requestType.toString()).equals('CREATE')}">
                             <td>${sessionScope.activityCategoryDescription.categoryName}</td>
@@ -116,5 +122,13 @@
         </div>
     </div>
 </div>
+<c:if test="${not empty sessionScope.Alert}">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="alert alert-danger"><p class="text-center"><strong>${sessionScope.Alert}</strong></p></div>
+            <c:remove var="Alert"/>
+        </div>
+    </div>
+</c:if>
 </body>
 </html>

@@ -57,19 +57,16 @@
                     <form class="form-group" action="${pageContext.request.contextPath}/userRequestAcceptServlet"
                           method="post">
                         <input type="hidden" name="userRequestId" value="${sessionScope.userRequest.userRequestId}">
-                        <input type="hidden" name="newActivityName" value="${sessionScope.userRequest.newActivityName}">
                         <input type="hidden" name="newUserActivityDuration"
                                value="${sessionScope.userRequest.userActivityDuration}">
-                        <button class="btn btn-lg btn-success" type="submit"><fmt:message
-                                key="button.accept"/></button>
+                        <button class="btn btn-lg btn-success" type="submit"><fmt:message key="button.accept"/></button>
                     </form>
                 </div>
                 <div class="col-sm-3">
                     <form class="form-group" action="${pageContext.request.contextPath}/userRequestDeclineServlet"
                           method="post">
                         <input type="hidden" name="userRequestId" value="${sessionScope.userRequest.userRequestId}">
-                        <button class="btn btn-lg btn-danger" type="submit"><fmt:message
-                                key="button.decline"/></button>
+                        <button class="btn btn-lg btn-danger" type="submit"><fmt:message key="button.decline"/></button>
                     </form>
                 </div>
             </div>
@@ -91,8 +88,7 @@
                 <tbody>
                 <tr>
                     <td>${sessionScope.oldUserActivity.activityCategoryName}</td>
-                    <td>${sessionScope.oldUserActivity.activityName}
-                        <strong>SET>>></strong> ${sessionScope.userRequest.newActivityName}</td>
+                    <td>${sessionScope.oldUserActivity.activityName}</td>
                     <td>${sessionScope.oldUserActivity.activityDuration}
                         <strong>SET>>></strong> ${sessionScope.userRequest.userActivityDuration}</td>
                 </tr>

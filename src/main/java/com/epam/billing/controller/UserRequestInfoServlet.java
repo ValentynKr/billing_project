@@ -49,6 +49,8 @@ public class UserRequestInfoServlet extends HttpServlet {
         // get UserActivity to EDIT or DELETE request
         UserActivity oldUserActivity = userActivityService.getByActivityIdAndUserId(userRequest.getActivityId(), userRequest.getUserId());
         UserActivityUserNameIdDurationRecordingDTO oldUserActivityDTO = userActivityService.getByIdUserActivityUserNameIdDurationDTO(oldUserActivity.getUserActivityId(), language.getId());
+        boolean unpredictedDeletionFlag = userRequestService.areUnresolvedEditRequestsPresent(userRequest.getUserId(), userRequest.getActivityId());
+        req.getSession().setAttribute("unpredictedDeletionFlag", unpredictedDeletionFlag);
         req.getSession().setAttribute("oldUserActivity", oldUserActivityDTO);
 
         // get ActivityCategory description for INVOLVE or CREATE request

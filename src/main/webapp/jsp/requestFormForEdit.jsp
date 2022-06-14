@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/jsp/welcome.jsp" class="btn btn-secondary btn-lg active" role="button"
+<a href="${pageContext.request.contextPath}/jsp/createRequestFromUser.jsp" class="btn btn-secondary btn-lg active" role="button"
    aria-pressed="true"><fmt:message
         key="button.back"/></a>
 
@@ -34,6 +34,7 @@
         <table class="table">
             <thead>
             <tr>
+                <th><fmt:message key="userActivity.activityCategoryName"/></th>
                 <th><fmt:message key="userActivity.activityName"/></th>
                 <th><fmt:message key="userActivity.durationOfActivity"/></th>
                 <th><fmt:message key="button.edit"/></th>
@@ -42,20 +43,15 @@
             <tbody>
             <c:forEach var="userActivity" items="${sessionScope.userActivities}">
                 <tr>
+                    <td>${userActivity.activityCategoryName}</td>
                     <td>${userActivity.activityName}</td>
                     <td>${userActivity.activityDuration}</td>
                     <td>
                         <form class="form-group-sm" action="${pageContext.request.contextPath}/userRequestEditServlet"
                               method="post">
 
-                                <input type="text" class="form-group-sm" name="userActivityNewName"
-                                       placeholder="<fmt:message key="label.editActivityName"/>">
-
-
                                 <input type="text" class="form-group-sm" name="userActivityNewDuration"
-                                       placeholder="<fmt:message key="label.editActivityDuration"/>">
-
-
+                                       placeholder="<fmt:message key="label.editActivityDuration"/>" required>
                                 <input type="text" class="form-group-sm" name="commentForAdmin"
                                        placeholder="<fmt:message key="label.comment"/>" required>
 

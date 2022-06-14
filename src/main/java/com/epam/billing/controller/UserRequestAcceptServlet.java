@@ -12,6 +12,7 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/userRequestAcceptServlet"})
 public class UserRequestAcceptServlet extends HttpServlet {
+    private static final String DELETION_IS_IMPOSSIBLE_MESSAGE = "You can`t delete before resolving all edit requests for this User Activity";
     private LanguageService languageService;
     private UserRequestService userRequestService;
     private UserActivityService userActivityService;
@@ -36,19 +37,32 @@ public class UserRequestAcceptServlet extends HttpServlet {
 
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         UserRequest userRequest = ((UserRequest) req.getSession().getAttribute("userRequest"));
+        boolean unpredictableFlag = ((boolean) req.getSession().getAttribute("unpredictedDeletionFlag"));
 
         if ((userRequest.getRequestType().toString()).equals("EDIT")) {
             editActivityOrUserActivity(req);
+            setResolvedAndRenewSessionScope(req, resp, language, userRequest);
         }
         if ((userRequest.getRequestType().toString()).equals("DELETE")) {
-            deleteUserActivity(req);
+            if (unpredictableFlag) {
+                req.getSession().setAttribute("Alert", DELETION_IS_IMPOSSIBLE_MESSAGE);
+                resp.sendRedirect("/billing_project/jsp/userRequestForm.jsp");
+            } else {
+                deleteUserActivity(req);
+                setResolvedAndRenewSessionScope(req, resp, language, userRequest);
+            }
         }
         if ((userRequest.getRequestType().toString()).equals("INVOLVE")) {
             createUserActivity(userRequest);
+            setResolvedAndRenewSessionScope(req, resp, language, userRequest);
         }
         if ((userRequest.getRequestType().toString()).equals("CREATE")) {
             createActivityAndUserActivity(userRequest);
+            setResolvedAndRenewSessionScope(req, resp, language, userRequest);
         }
+    }
+
+    private void setResolvedAndRenewSessionScope(HttpServletRequest req, HttpServletResponse resp, Language language, UserRequest userRequest) throws IOException {
         userRequest.setRequestStatus(RequestStatus.RESOLVED);
         userRequestService.update(userRequest);
         req.getSession().setAttribute("userActivities",
@@ -98,14 +112,7 @@ public class UserRequestAcceptServlet extends HttpServlet {
     private void editActivityOrUserActivity(HttpServletRequest req) {
         UserActivityUserNameIdDurationRecordingDTO oldUserActivityDTO  = (UserActivityUserNameIdDurationRecordingDTO) req.getSession().getAttribute("oldUserActivity");
         UserActivity oldUserActivity = userActivityService.getById(oldUserActivityDTO.getUserActivityId());
-        String newActivityName = req.getParameter("newActivityName");
         float newUserActivityDuration = Float.parseFloat(req.getParameter("newUserActivityDuration"));
-
-        if (!newActivityName.isEmpty()) {
-            Activity newActivity = activityService.getById(oldUserActivity.getActivityId());
-            newActivity.setName(newActivityName);
-            activityService.update(newActivity);
-        }
         oldUserActivity.setDurationOfActivity(newUserActivityDuration);
         userActivityService.update(oldUserActivity);
     }

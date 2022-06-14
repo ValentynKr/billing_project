@@ -20,6 +20,10 @@ public class UserRequestService {
         return userRequestRepository.getAll();
     }
 
+    public boolean areUnresolvedEditRequestsPresent(int userId, int activityId) {
+        return userRequestRepository.areUnresolvedEditRequestsPresent(userId, activityId);
+    }
+
     public List<DateStatusTypeUserRequestDTO> getAllWithUserNames() {
         return userRequestRepository.getAllWithUserNames();
     }
