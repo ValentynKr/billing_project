@@ -44,7 +44,8 @@ public class UserActivityRepository extends AbstractRepository<UserActivity> {
             "on activity.category_id = activity_category.id\n" +
             "inner join activity_category_description\n" +
             "on activity_category.id = activity_category_description.category_id\n" +
-            "where user_id=? and language_id =?";
+            "where user_id=? and language_id =?\n" +
+            "order by activity_category_description.name";
 
     private static final String JOIN_ALL = "SELECT\n" +
             "activity_category_description.name, activity.name, users.name , user_activities.duration\n" +

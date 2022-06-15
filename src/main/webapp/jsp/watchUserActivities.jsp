@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><fmt:message key="label.chooseUserToWatchUserActivities"/></title>
+    <title><fmt:message key="label.userActivities"/></title>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/signin.css" rel="stylesheet">
 
@@ -19,13 +19,12 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/jsp/welcome-admin.jsp" class="btn btn-secondary btn-lg active"
+<a href="${pageContext.request.contextPath}/jsp/watchAllUsersAdmin.jsp" class="btn btn-secondary btn-lg active"
    role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
-
 
 <div class="container">
     <div class="btn-group pull-left">
-        <p class="h1"><fmt:message key="label.chooseUserToWatchUserActivities"/></p>
+        <p class="h1"><fmt:message key="label.userActivities"/> "${sessionScope.nameOfUserForUserActivities}"</p>
     </div>
 </div>
 <hr>
@@ -35,29 +34,27 @@
         <table class="table">
             <thead>
             <tr>
-                <th><fmt:message key="placeholder.userId"/></th>
-                <th><fmt:message key="placeholder.username"/></th>
-                <th><fmt:message key="placeholder.email"/></th>
+                <th><fmt:message key="userActivity.activityCategoryName"/></th>
+                <th><fmt:message key="userActivity.activityName"/></th>
+                <th><fmt:message key="userActivity.durationOfActivity"/></th>
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="user" items="${sessionScope.listOfAllUsers}">
+            <c:forEach var="userActivity" items="${sessionScope.userActivities}">
                 <tr>
-                    <td>${user.userId}</td>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>
-                        <form class="form-group" action="${pageContext.request.contextPath}/userActivityInfoAdmin"
-                              method="post">
-                            <input type="hidden" name="userIdForUserActivities" value="${user.userId}">
-                            <button class="btn btn-xs btn-default" type="submit"><fmt:message
-                                    key="button.watchRequest"/></button>
-                        </form>
-                    </td>
+                    <td>${userActivity.activityCategoryName}</td>
+                    <td>${userActivity.activityName}</td>
+                    <td>${userActivity.activityDuration}</td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="btn-group pull-left">
+        <p class="h4"><fmt:message key="label.totalTimeSpent"/>: ${sessionScope.totalTimeSpent}</p>
     </div>
 </div>
 </body>

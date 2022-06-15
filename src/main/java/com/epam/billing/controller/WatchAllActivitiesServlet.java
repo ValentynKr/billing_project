@@ -1,13 +1,9 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.entity.*;
-import com.epam.billing.service.ActivityCategoryService;
 import com.epam.billing.service.ActivityService;
 import com.epam.billing.service.LanguageService;
-import com.epam.billing.service.UserRequestService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,32 +11,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 
 @WebServlet(urlPatterns = {"/watchAllActivitiesServlet"})
 public class WatchAllActivitiesServlet extends HttpServlet {
     private ActivityService activityService;
-    private UserRequestService userRequestService;
     private LanguageService languageService;
-    private ActivityCategoryService activityCategoryService;
-
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
-        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
-        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String sortCriteria = req.getParameter("sort");
-
         String activityCategoryIdToFilter = req.getParameter("filter");
 
         if (activityCategoryIdToFilter != null) {
@@ -72,8 +60,6 @@ public class WatchAllActivitiesServlet extends HttpServlet {
             req.getSession().setAttribute("allActivityCount", listOfActivities);
             req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
         }
-
-
     }
 
     @Override
