@@ -54,7 +54,25 @@
             <div class="col-sm-2"><fmt:message key="placeholder.userstatus"/></div>
         </c:if>
     </div>
-
+</div>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <form class="form-group" action="${pageContext.request.contextPath}/watchAllActivitiesServlet"
+                  method="post">
+                <button class="btn btn-lg btn-info" type="submit"><fmt:message
+                        key="button.watchAllActivities"/></button>
+            </form>
+        </div>
+        <div class="col-sm-2">
+            <form class="form-group" action="${pageContext.request.contextPath}/watchAllUsersServlet"
+                  method="post">
+                <button class="btn btn-lg btn-info" type="submit"><fmt:message
+                        key="button.watchAllUsers"/></button>
+            </form>
+        </div>
+    </div>
 </div>
 <hr>
 <div class="container">

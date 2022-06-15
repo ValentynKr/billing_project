@@ -1,5 +1,6 @@
 package com.epam.billing.service;
 
+import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.dto.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
 import com.epam.billing.repository.ActivityRepository;
@@ -21,6 +22,10 @@ public class ActivityService {
 
     public List<ActivityIdActivityCategoryLocalizedNameActivityNameDTO> getAllWithCategoryLocalizedNames(int languageId) {
         return activityRepository.getAllWithCategoryLocalizedNames(languageId);
+    }
+
+    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId) {
+        return activityRepository.getActivityCategoryLocActivityUserActivityCountDTO(languageId);
     }
 
     public void save(Activity activity) {

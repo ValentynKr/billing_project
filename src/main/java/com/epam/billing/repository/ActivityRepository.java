@@ -1,5 +1,6 @@
 package com.epam.billing.repository;
 
+import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.dto.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
 
@@ -11,12 +12,21 @@ import java.util.Optional;
 public class ActivityRepository extends AbstractRepository<Activity> {
 
     private static final String SELECT_ALL = "SELECT * FROM activity";
+    private static final String COUNT_IN_USER_ACTIVITIES = "SELECT COUNT(activity_id)\n" +
+            "FROM user_activities \n" +
+            "WHERE activity_id = ?";
+    private static final String SELECT_ALL_WITH_LOCALIZED_CATEGORY_IDS = "SELECT \n" +
+            "activity.category_id , activity.id, activity_category_description.name, activity.name \n" +
+            "from activity\n" +
+            "inner join activity_category_description\n" +
+            "on  activity.category_id = activity_category_description.category_id\n" +
+            "where language_id=?";
     private static final String SELECT_ALL_WITH_LOCALIZED_CATEGORY = "SELECT \n" +
             "activity.id, activity_category_description.name, activity.name \n" +
             "from activity\n" +
             "inner join activity_category_description\n" +
             "on  activity.category_id = activity_category_description.category_id\n" +
-            "where language_id=? order by activity_category_description.name;";
+            "where language_id=? order by activity_category_description.name";
     private static final String SELECT_ALL_WHERE_ID = "SELECT * FROM activity WHERE id = ?";
     private static final String SELECT_ALL_WHERE_NAME = "SELECT * FROM activity WHERE name = ?";
     private static final String SELECT_ALL_WHERE_NAME_IN_CATEGORY = "SELECT * FROM activity WHERE name =? AND category_id =?;";
@@ -58,6 +68,42 @@ public class ActivityRepository extends AbstractRepository<Activity> {
             throwables.printStackTrace();
         }
         return activityIdActivityCategoryLocalizedNameActivityNameDTOS;
+    }
+
+    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId) {
+        List<ActivityCategoryLocActivityUserActivityCountDTO> activityCategoryLocActivityUserActivityCountDTOS = new ArrayList<>();
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WITH_LOCALIZED_CATEGORY_IDS)) {
+            preparedStatement.setInt(1, languageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                ActivityCategoryLocActivityUserActivityCountDTO activityCategoryLocActivityUserActivityCountDTO = new ActivityCategoryLocActivityUserActivityCountDTO();
+                activityCategoryLocActivityUserActivityCountDTO.setActivityCategoryId(resultSet.getInt(1));
+                activityCategoryLocActivityUserActivityCountDTO.setActivityId(resultSet.getInt(2));
+                activityCategoryLocActivityUserActivityCountDTO.setActivityCategoryName(resultSet.getString(3));
+                activityCategoryLocActivityUserActivityCountDTO.setActivityName(resultSet.getString(4));
+                activityCategoryLocActivityUserActivityCountDTO.setNumberOfUserActivities(countInUserActivities(activityCategoryLocActivityUserActivityCountDTO.getActivityId()));
+                activityCategoryLocActivityUserActivityCountDTOS.add(activityCategoryLocActivityUserActivityCountDTO);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return activityCategoryLocActivityUserActivityCountDTOS;
+    }
+
+    private int countInUserActivities(int activityId) {
+        int count = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_IN_USER_ACTIVITIES)) {
+            preparedStatement.setInt(1, activityId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return count;
     }
 
     @Override
