@@ -2,6 +2,7 @@ package com.epam.billing.controller;
 
 import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.entity.*;
+import com.epam.billing.service.ActivityCategoryService;
 import com.epam.billing.service.ActivityService;
 import com.epam.billing.service.LanguageService;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -18,29 +20,40 @@ import java.util.List;
 public class WatchAllActivitiesServlet extends HttpServlet {
     private ActivityService activityService;
     private LanguageService languageService;
+    private ActivityCategoryService activityCategoryService;
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
+        activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
 
         String sortCriteria = req.getParameter("sort");
         String activityCategoryIdToFilter = req.getParameter("filter");
 
         if (activityCategoryIdToFilter != null) {
             int activityCategoryId = Integer.parseInt(activityCategoryIdToFilter);
+
             List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivitiesFiltered = new ArrayList<>();
             List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = (List<ActivityCategoryLocActivityUserActivityCountDTO>) req.getSession().getAttribute("allActivityCount");
             for (ActivityCategoryLocActivityUserActivityCountDTO userActivity : listOfActivities) {
-                if (userActivity.getActivityCategoryId() == activityCategoryId) {
+                if ((userActivity.getActivityCategoryId() == activityCategoryId)) {
                     listOfActivitiesFiltered.add(userActivity);
                 }
             }
-            req.getSession().setAttribute("chosenCategoryToFilter", listOfActivitiesFiltered.get(0).getActivityCategoryName());
+            if (listOfActivitiesFiltered.isEmpty()) {
+                req.getSession().setAttribute("filteredActivitiesAreExistingFlag", false);
+            } else {
+                req.getSession().setAttribute("filteredActivitiesAreExistingFlag", true);
+            }
+            req.getSession().setAttribute("chosenCategoryToFilter", activityCategoryService.getByIdLocalized(activityCategoryId, language.getId()).getCategoryName());
             req.getSession().setAttribute("allActivityCountFiltered", listOfActivitiesFiltered);
             req.getRequestDispatcher("/jsp/watchAllActivitiesAdminFiltered.jsp").forward(req, resp);
         }
@@ -66,6 +79,8 @@ public class WatchAllActivitiesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = activityService.getActivityCategoryLocActivityUserActivityCountDTO(language.getId());
+
+
         req.getSession().setAttribute("allActivityCount", listOfActivities);
         req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
     }

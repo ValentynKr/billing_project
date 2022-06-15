@@ -40,7 +40,6 @@
     </div>
 </div>
 <hr>
-
 <div class="container">
     <div class="col-md-10">
         <table class="table">

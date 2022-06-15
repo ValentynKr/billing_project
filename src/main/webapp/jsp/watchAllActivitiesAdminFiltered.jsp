@@ -28,25 +28,36 @@
     </div>
 </div>
 <hr>
-<div class="container">
-    <div class="col-md-10">
-        <table class="table">
-            <thead>
-            <tr>
-                <th><fmt:message key="userActivity.activityName"/></th>
-                <th><fmt:message key="userActivity.numberOfUsers"/></th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="allActivityCountFiltered" items="${sessionScope.allActivityCountFiltered}">
-                <tr>
-                    <td>${allActivityCountFiltered.activityName}</td>
-                    <td>${allActivityCountFiltered.numberOfUserActivities}</td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
-</div>
+<c:choose>
+    <c:when test="${!sessionScope.filteredActivitiesAreExistingFlag}">
+        <div class="container">
+            <div class="btn-group pull-left">
+                <p class="text-danger"><fmt:message key="label.nothingToExpose"/></p>
+            </div>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="container">
+            <div class="col-md-10">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><fmt:message key="userActivity.activityName"/></th>
+                        <th><fmt:message key="userActivity.numberOfUsers"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="allActivityCountFiltered" items="${sessionScope.allActivityCountFiltered}">
+                        <tr>
+                            <td>${allActivityCountFiltered.activityName}</td>
+                            <td>${allActivityCountFiltered.numberOfUserActivities}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
 </body>
 </html>
