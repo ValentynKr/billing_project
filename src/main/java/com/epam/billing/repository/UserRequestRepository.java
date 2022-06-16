@@ -4,6 +4,7 @@ import com.epam.billing.dto.DateStatusTypeUserRequestDTO;
 import com.epam.billing.entity.RequestStatus;
 import com.epam.billing.entity.RequestType;
 import com.epam.billing.entity.UserRequest;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,11 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
     private static final String UPDATE = "UPDATE user_request SET request_date=?, user_id=?, request_type=?, request_status=?, " +
             "activity_category_id=?, activity_id=?, user_activity_duration=?, new_activity_name=?, comment=?" +
             "WHERE id=?";
+    private int noOfRecords;
+
+    public int getNoOfRecords() {
+        return noOfRecords;
+    }
 
     @Override
     public List<UserRequest> getAll() {
@@ -57,7 +63,6 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
         }
         return isPresent;
     }
-
     public List<DateStatusTypeUserRequestDTO> getAllWithUserNames() {
         List<DateStatusTypeUserRequestDTO> dateStatusTypeUserRequestDTOList = new ArrayList<>();
         try (Connection connection = getConnection();
@@ -74,6 +79,48 @@ public class UserRequestRepository extends AbstractRepository<UserRequest> {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+        return dateStatusTypeUserRequestDTOList;
+    }
+    public List<DateStatusTypeUserRequestDTO> getAllWithUserNamesToDemonstrate(int offset, int noOfRecords) {
+        List<DateStatusTypeUserRequestDTO> dateStatusTypeUserRequestDTOList = new ArrayList<>();
+        Connection connection = getConnection();
+        String statement = "SELECT SQL_CALC_FOUND_ROWS\n" +
+                "user_request.id, user_request.request_date, user_request.request_status, user_request.request_type, users.name  \n" +
+                "FROM  user_request\n" +
+                "INNER JOIN users\n" +
+                "ON user_request.user_id = users.id \n" +
+                "ORDER BY CASE WHEN request_status = 'UNRESOLVED' THEN 0 ELSE 1 END, request_date DESC limit " + offset + ", " + noOfRecords;
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                DateStatusTypeUserRequestDTO dateStatusTypeUserRequestDTO = new DateStatusTypeUserRequestDTO();
+                dateStatusTypeUserRequestDTO.setRequestId(resultSet.getInt(1));
+                dateStatusTypeUserRequestDTO.setTimestamp(resultSet.getTimestamp(2));
+                dateStatusTypeUserRequestDTO.setRequestStatus(RequestStatus.valueOf(resultSet.getString(3)));
+                dateStatusTypeUserRequestDTO.setRequestType(RequestType.valueOf(resultSet.getString(4)));
+                dateStatusTypeUserRequestDTO.setUserName(resultSet.getString(5));
+                dateStatusTypeUserRequestDTOList.add(dateStatusTypeUserRequestDTO);
+            }
+            resultSet.close();
+            resultSet = preparedStatement.executeQuery("SELECT FOUND_ROWS()");
+            if (resultSet.next()) {
+                this.noOfRecords = resultSet.getInt(1);
+            }
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
         }
         return dateStatusTypeUserRequestDTOList;
     }

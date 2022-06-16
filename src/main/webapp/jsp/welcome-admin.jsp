@@ -35,7 +35,7 @@
    aria-pressed="true"><fmt:message key="addCategoryOfActivity.button"/></a>
 <a href="${pageContext.request.contextPath}/jsp/editOrDeleteCategory.jsp" class="btn btn-info" role="button"
    aria-pressed="true"><fmt:message key="button.editOrDeleteCategory"/></a>
-<a href="${pageContext.request.contextPath}/jsp/userRequestsAdmin.jsp" class="btn btn-danger" role="button"
+<a href="${pageContext.request.contextPath}/watchAllUserRequestsServlet" class="btn btn-danger" role="button"
    aria-pressed="true"><fmt:message key="button.userRequests"/></a>
 
 

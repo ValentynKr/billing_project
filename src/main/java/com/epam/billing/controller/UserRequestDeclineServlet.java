@@ -25,6 +25,6 @@ public class UserRequestDeclineServlet extends HttpServlet {
         userRequest.setRequestStatus(RequestStatus.CANCELED);
         userRequestService.update(userRequest);
         req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
-        resp.sendRedirect("/billing_project/jsp/userRequestsAdmin.jsp");
+        resp.sendRedirect("/billing_project/watchAllUserRequestsServlet");
     }
 }

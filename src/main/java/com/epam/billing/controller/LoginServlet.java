@@ -70,7 +70,6 @@ public class LoginServlet extends HttpServlet {
                         req.getSession().setAttribute("listOfAllActivityCategoriesWithStatus", activityCategoryService.getAllWithLocalizedNameStatusDTO(language.getId()));
                         req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
                         req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
-                        req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
 
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {

@@ -74,7 +74,7 @@ public class UserRequestAcceptServlet extends HttpServlet {
         req.getSession().setAttribute("listOfAllActivities", activityService.getAll());
         req.getSession().setAttribute("listOfAllActivitiesWithLocalizedCategories", activityService.getAllWithCategoryLocalizedNames(language.getId()));
         req.getSession().setAttribute("listOfUserRequests", userRequestService.getAllWithUserNames());
-        resp.sendRedirect("/billing_project/jsp/userRequestsAdmin.jsp");
+        resp.sendRedirect("/billing_project/watchAllUserRequestsServlet");
     }
 
     private void deleteUserActivity(HttpServletRequest req) {

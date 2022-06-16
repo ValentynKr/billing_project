@@ -28,6 +28,14 @@ public class UserRequestService {
         return userRequestRepository.getAllWithUserNames();
     }
 
+    public List<DateStatusTypeUserRequestDTO> getAllWithUserNamesToDemonstrate(int offset, int noOfRecords) {
+        return userRequestRepository.getAllWithUserNamesToDemonstrate(offset, noOfRecords);
+    }
+
+    public int getNoOfRecords() {
+        return userRequestRepository.getNoOfRecords();
+    }
+
     public void save(UserRequest userRequest) {
         userRequestRepository.save(userRequest);
     }

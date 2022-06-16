@@ -28,8 +28,9 @@
     </div>
 </div>
 <hr>
+
 <div class="container">
-    <div class="col-md-10">
+    <div class="col-md-11">
         <table class="table">
             <thead>
             <tr>
@@ -40,7 +41,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="listOfUserRequests" items="${sessionScope.listOfUserRequests}">
+            <c:forEach var="listOfUserRequests" items="${requestScope.requestListToDemo}">
                 <tr>
                     <td>${listOfUserRequests.timestamp}</td>
                     <td>${listOfUserRequests.requestStatus}</td>
@@ -49,15 +50,60 @@
                     <td>
                         <form class="form-group" action="${pageContext.request.contextPath}/userRequestInfoServlet"
                               method="post">
-                        <input type="hidden" name="userRequestId" value="${listOfUserRequests.requestId}">
+                            <input type="hidden" name="userRequestId" value="${listOfUserRequests.requestId}">
                             <button class="btn btn-xs btn-default" type="submit"><fmt:message
                                     key="button.watchRequest"/></button>
                         </form>
-                    </td>>
+                    </td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
+        <div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <c:choose>
+                        <c:when test="${requestScope.currentPage != 1}">
+                            <li class="page-item"><a class="page-link"
+                                                     href="${pageContext.request.contextPath}/watchAllUserRequestsServlet?page=${requestScope.currentPage - 1}">Previous</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+
+                    <c:forEach begin="1" end="${requestScope.noOfPages}" var="i">
+                        <c:choose>
+                            <c:when test="${requestScope.currentPage eq i}">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">${i}</a></li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link"
+                                                         href="${pageContext.request.contextPath}/watchAllUserRequestsServlet?page=${i}">${i}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${requestScope.currentPage lt requestScope.noOfPages}">
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="${pageContext.request.contextPath}/watchAllUserRequestsServlet?page=${requestScope.currentPage + 1}">Next</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Next</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 </body>

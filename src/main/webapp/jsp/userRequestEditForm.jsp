@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<a href="${pageContext.request.contextPath}/jsp/userRequestsAdmin.jsp" class="btn btn-secondary btn-lg active"
+<a href="${pageContext.request.contextPath}/watchAllUserRequestsServlet" class="btn btn-secondary btn-lg active"
    role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
 
 
