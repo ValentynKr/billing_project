@@ -24,8 +24,8 @@ public class ActivityService {
         return activityRepository.getAllWithCategoryLocalizedNames(languageId);
     }
 
-    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId) {
-        return activityRepository.getActivityCategoryLocActivityUserActivityCountDTO(languageId);
+    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId, String criteria) {
+        return activityRepository.getActivityCategoryLocActivityUserActivityCountDTO(languageId, criteria);
     }
 
     public void save(Activity activity) {

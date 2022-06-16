@@ -3,7 +3,6 @@ package com.epam.billing.repository;
 import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.dto.ActivityIdActivityCategoryLocalizedNameActivityNameDTO;
 import com.epam.billing.entity.Activity;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +11,15 @@ import java.util.Optional;
 public class ActivityRepository extends AbstractRepository<Activity> {
 
     private static final String SELECT_ALL = "SELECT * FROM activity";
-    private static final String COUNT_IN_USER_ACTIVITIES = "SELECT COUNT(activity_id)\n" +
-            "FROM user_activities \n" +
-            "WHERE activity_id = ?";
     private static final String SELECT_ALL_WITH_LOCALIZED_CATEGORY_IDS = "SELECT \n" +
-            "activity.category_id , activity.id, activity_category_description.name, activity.name \n" +
-            "from activity\n" +
+            "a.category_id, a.id, activity_category_description.name, a.name, \n" +
+            "(select COUNT(activity_id)\n" +
+            "FROM user_activities ua\n" +
+            "WHERE ua.activity_id = a.id) as counter\n" +
+            "from activity a\n" +
             "inner join activity_category_description\n" +
-            "on  activity.category_id = activity_category_description.category_id\n" +
-            "where language_id=?";
+            "on  a.category_id = activity_category_description.category_id\n" +
+            "where language_id=? order by #{counter}";
     private static final String SELECT_ALL_WITH_LOCALIZED_CATEGORY = "SELECT \n" +
             "activity.id, activity_category_description.name, activity.name \n" +
             "from activity\n" +
@@ -70,10 +69,11 @@ public class ActivityRepository extends AbstractRepository<Activity> {
         return activityIdActivityCategoryLocalizedNameActivityNameDTOS;
     }
 
-    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId) {
+    public List<ActivityCategoryLocActivityUserActivityCountDTO> getActivityCategoryLocActivityUserActivityCountDTO(int languageId, String criteria) {
         List<ActivityCategoryLocActivityUserActivityCountDTO> activityCategoryLocActivityUserActivityCountDTOS = new ArrayList<>();
+        String query = SELECT_ALL_WITH_LOCALIZED_CATEGORY_IDS.replace("#{counter}", criteria);
         try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WITH_LOCALIZED_CATEGORY_IDS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, languageId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -82,28 +82,13 @@ public class ActivityRepository extends AbstractRepository<Activity> {
                 activityCategoryLocActivityUserActivityCountDTO.setActivityId(resultSet.getInt(2));
                 activityCategoryLocActivityUserActivityCountDTO.setActivityCategoryName(resultSet.getString(3));
                 activityCategoryLocActivityUserActivityCountDTO.setActivityName(resultSet.getString(4));
-                activityCategoryLocActivityUserActivityCountDTO.setNumberOfUserActivities(countInUserActivities(activityCategoryLocActivityUserActivityCountDTO.getActivityId()));
+                activityCategoryLocActivityUserActivityCountDTO.setNumberOfUserActivities(resultSet.getInt(5));
                 activityCategoryLocActivityUserActivityCountDTOS.add(activityCategoryLocActivityUserActivityCountDTO);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return activityCategoryLocActivityUserActivityCountDTOS;
-    }
-
-    private int countInUserActivities(int activityId) {
-        int count = 0;
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_IN_USER_ACTIVITIES)) {
-            preparedStatement.setInt(1, activityId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                count = resultSet.getInt(1);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return count;
     }
 
     @Override
@@ -141,7 +126,7 @@ public class ActivityRepository extends AbstractRepository<Activity> {
         return activity;
     }
 
-    public Optional<Activity> getByNameSafe(String name) { //toDo return optional
+    public Optional<Activity> getByNameSafe(String name) {
         Activity activity = new Activity();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_WHERE_NAME)) {

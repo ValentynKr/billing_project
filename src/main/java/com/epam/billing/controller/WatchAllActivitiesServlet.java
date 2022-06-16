@@ -19,18 +19,16 @@ public class WatchAllActivitiesServlet extends HttpServlet {
     private ActivityService activityService;
     private LanguageService languageService;
     private ActivityCategoryService activityCategoryService;
-    private final Map<Integer, Comparator<ActivityCategoryLocActivityUserActivityCountDTO>> criteriaToComparator = new HashMap<>();
-
+    private final Map<Integer, String> sortingCriteria = new HashMap<>();
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
-        criteriaToComparator.put(1, sortByCategoryName);
-        criteriaToComparator.put(2, sortByActivityName);
-        criteriaToComparator.put(3, sortByUserActivitiesNumber);
-
+        sortingCriteria.put(1, "activity_category_description.name");
+        sortingCriteria.put(2, "a.name");
+        sortingCriteria.put(3, "counter desc");
     }
 
     @Override
@@ -43,7 +41,6 @@ public class WatchAllActivitiesServlet extends HttpServlet {
 
         if (activityCategoryIdToFilter != null) {
             int activityCategoryId = Integer.parseInt(activityCategoryIdToFilter);
-
             List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivitiesFiltered = new ArrayList<>();
             List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = (List<ActivityCategoryLocActivityUserActivityCountDTO>) req.getSession().getAttribute("allActivityCount");
             for (ActivityCategoryLocActivityUserActivityCountDTO userActivity : listOfActivities) {
@@ -62,48 +59,18 @@ public class WatchAllActivitiesServlet extends HttpServlet {
         }
 
         if (sortCriteria != null) {
-            int criteria = Integer.parseInt(sortCriteria);
-            List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = (List<ActivityCategoryLocActivityUserActivityCountDTO>) req.getSession().getAttribute("allActivityCount");
-            listOfActivities.sort(getComparatorBySortingCriteria(criteria));
-            req.getSession().setAttribute("allActivityCount", listOfActivities);
+            req.getSession().setAttribute("allActivityCount", activityService.getActivityCategoryLocActivityUserActivityCountDTO(language.getId(),
+                    sortingCriteria.get(Integer.parseInt(sortCriteria))));
             req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
         }
-    }
-
-    private Comparator<? super ActivityCategoryLocActivityUserActivityCountDTO> getComparatorBySortingCriteria(int criteria) {
-        return criteriaToComparator.get(criteria);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
-        List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = activityService.getActivityCategoryLocActivityUserActivityCountDTO(language.getId());
+        List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = activityService.getActivityCategoryLocActivityUserActivityCountDTO(language.getId(), "id");
 
         req.getSession().setAttribute("allActivityCount", listOfActivities);
         req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
     }
-
-    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByUserActivitiesNumber = (one, two) -> {
-        if (one.getNumberOfUserActivities() == two.getNumberOfUserActivities()) {
-            return 0;
-        } else {
-            return one.getNumberOfUserActivities() < two.getNumberOfUserActivities() ? 1 : -1;
-        }
-    };
-
-    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByCategoryName = (one, two) -> {
-        if (one.getActivityCategoryName().equals(two.getActivityCategoryName())) {
-            return 0;
-        } else {
-            return one.getActivityCategoryName().compareTo(two.getActivityCategoryName());
-        }
-    };
-
-    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByActivityName = (one, two) -> {
-        if (one.getActivityName().equals(two.getActivityName())) {
-            return 0;
-        } else {
-            return one.getActivityName().compareTo(two.getActivityName());
-        }
-    };
 }
