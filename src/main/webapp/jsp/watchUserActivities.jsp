@@ -21,6 +21,8 @@
 
 <a href="${pageContext.request.contextPath}/jsp/watchAllUsersAdmin.jsp" class="btn btn-secondary btn-lg active"
    role="button" aria-pressed="true"><fmt:message key="button.back"/></a>
+<a href="${pageContext.request.contextPath}/downloadReport" class="btn btn-info" role="button"><fmt:message
+        key="button.formAndDownloadReport"/></a>
 
 <div class="container">
     <div class="btn-group pull-left">
@@ -57,10 +59,5 @@
         <p class="h4"><fmt:message key="label.totalTimeSpent"/>: ${sessionScope.totalTimeSpent}</p>
     </div>
 </div>
-<div>
-    <a href="${pageContext.request.contextPath}/downloadReport" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
-            key="button.formAndDownloadReport"/></a>
-</div>
-
 </body>
 </html>
