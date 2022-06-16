@@ -11,9 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 @WebServlet(urlPatterns = {"/watchAllActivitiesServlet"})
@@ -21,12 +19,17 @@ public class WatchAllActivitiesServlet extends HttpServlet {
     private ActivityService activityService;
     private LanguageService languageService;
     private ActivityCategoryService activityCategoryService;
+    private final Map<Integer, Comparator<ActivityCategoryLocActivityUserActivityCountDTO>> criteriaToComparator = new HashMap<>();
+
 
     @Override
     public void init() {
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
+        criteriaToComparator.put(1, sortByCategoryName);
+        criteriaToComparator.put(2, sortByActivityName);
+        criteriaToComparator.put(3, sortByUserActivitiesNumber);
 
     }
 
@@ -61,18 +64,14 @@ public class WatchAllActivitiesServlet extends HttpServlet {
         if (sortCriteria != null) {
             int criteria = Integer.parseInt(sortCriteria);
             List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = (List<ActivityCategoryLocActivityUserActivityCountDTO>) req.getSession().getAttribute("allActivityCount");
-            if (criteria == 1) {
-                sortByCategoryName(listOfActivities);
-            }
-            if (criteria == 2) {
-                sortByActivityName(listOfActivities);
-            }
-            if (criteria == 3) {
-                sortByUserActivitiesNumber(listOfActivities);
-            }
+            listOfActivities.sort(getComparatorBySortingCriteria(criteria));
             req.getSession().setAttribute("allActivityCount", listOfActivities);
             req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
         }
+    }
+
+    private Comparator<? super ActivityCategoryLocActivityUserActivityCountDTO> getComparatorBySortingCriteria(int criteria) {
+        return criteriaToComparator.get(criteria);
     }
 
     @Override
@@ -80,38 +79,31 @@ public class WatchAllActivitiesServlet extends HttpServlet {
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities = activityService.getActivityCategoryLocActivityUserActivityCountDTO(language.getId());
 
-
         req.getSession().setAttribute("allActivityCount", listOfActivities);
         req.getRequestDispatcher("/jsp/watchAllActivitiesAdmin.jsp").forward(req, resp);
     }
 
-    private void sortByUserActivitiesNumber(List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities) {
-        listOfActivities.sort((one, two) -> {
-            if (one.getNumberOfUserActivities() == two.getNumberOfUserActivities()) {
-                return 0;
-            } else {
-                return one.getNumberOfUserActivities() < two.getNumberOfUserActivities() ? 1 : -1;
-            }
-        });
-    }
+    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByUserActivitiesNumber = (one, two) -> {
+        if (one.getNumberOfUserActivities() == two.getNumberOfUserActivities()) {
+            return 0;
+        } else {
+            return one.getNumberOfUserActivities() < two.getNumberOfUserActivities() ? 1 : -1;
+        }
+    };
 
-    private void sortByActivityName(List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities) {
-        listOfActivities.sort((one, two) -> {
-            if (one.getActivityName().equals(two.getActivityName())) {
-                return 0;
-            } else {
-                return one.getActivityName().compareTo(two.getActivityName());
-            }
-        });
-    }
+    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByCategoryName = (one, two) -> {
+        if (one.getActivityCategoryName().equals(two.getActivityCategoryName())) {
+            return 0;
+        } else {
+            return one.getActivityCategoryName().compareTo(two.getActivityCategoryName());
+        }
+    };
 
-    private void sortByCategoryName(List<ActivityCategoryLocActivityUserActivityCountDTO> listOfActivities) {
-        listOfActivities.sort((one, two) -> {
-            if (one.getActivityCategoryName().equals(two.getActivityCategoryName())) {
-                return 0;
-            } else {
-                return one.getActivityCategoryName().compareTo(two.getActivityCategoryName());
-            }
-        });
-    }
+    private final Comparator<ActivityCategoryLocActivityUserActivityCountDTO> sortByActivityName = (one, two) -> {
+        if (one.getActivityName().equals(two.getActivityName())) {
+            return 0;
+        } else {
+            return one.getActivityName().compareTo(two.getActivityName());
+        }
+    };
 }
