@@ -1,5 +1,6 @@
 package com.epam.billing.controller;
 
+import com.epam.billing.dto.UserActivityUserNameIdDurationRecordingDTO;
 import com.epam.billing.entity.Language;
 import com.epam.billing.entity.User;
 import com.epam.billing.exeption.AppException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet(urlPatterns = {"/login"})
@@ -23,7 +25,6 @@ public class LoginServlet extends HttpServlet {
     private LanguageService languageService;
     private ActivityCategoryService activityCategoryService;
     private ActivityService activityService;
-    private UserRequestService userRequestService;
 
     @Override
     public void init() {
@@ -32,7 +33,6 @@ public class LoginServlet extends HttpServlet {
         languageService = (LanguageService) getServletContext().getAttribute("languageService");
         activityService = (ActivityService) getServletContext().getAttribute("activityService");
         activityCategoryService = (ActivityCategoryService) getServletContext().getAttribute("activityCategoryService");
-        userRequestService = (UserRequestService) getServletContext().getAttribute("userRequestService");
     }
 
 
@@ -73,8 +73,15 @@ public class LoginServlet extends HttpServlet {
 
                         req.getRequestDispatcher("/jsp/welcome-admin.jsp").forward(req, resp);
                     } else {
-                        req.getSession().setAttribute("userActivities",
-                                userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId(), language.getId()));
+                        List<UserActivityUserNameIdDurationRecordingDTO> listOfActivities = userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId(), language.getId());
+                        if (listOfActivities.isEmpty()) {
+                            req.getSession().setAttribute("flagNothingToExpose", true);
+                        } else {
+                            req.getSession().setAttribute("flagNothingToExpose", false);
+                            req.getSession().setAttribute("userActivities",
+                                    userActivityService.getUserActivityUserNameIdDurationDTO(user.getUserId(), language.getId()));
+                        }
+                        req.getSession().setAttribute("listOfOpenedActivityCategories", activityCategoryService.getOpenedWithLocalizedNames(language.getId()));
                         resp.sendRedirect("/billing_project/jsp/welcome.jsp");
                     }
                 } else {

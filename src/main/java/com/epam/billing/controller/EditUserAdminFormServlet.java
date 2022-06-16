@@ -36,32 +36,35 @@ public class EditUserAdminFormServlet extends HttpServlet {
         isAdmin = isAdminNum > 0;
         Language language = languageService.getByShortName(req.getSession().getAttribute("language").toString());
         User user = (User) req.getSession().getAttribute("userToEdit");
-        String newPassword = req.getParameter("password");
+
         String currentPassword = user.getPassword();
-        if (user.getEmail().equals(req.getParameter("email"))) {
-            validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword);
+        String newPassword = req.getParameter("password");
+        String newEmail = req.getParameter("email");
+
+        if (user.getEmail().equals(newEmail)) {
+            validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword,newEmail);
         } else {
-            Optional<User> potentiallyExistingUser = userService.getByEmail(req.getParameter("email"));
+            Optional<User> potentiallyExistingUser = userService.getByEmail(newEmail);
             if (potentiallyExistingUser.isPresent()) {
                 req.getSession().setAttribute("Alert", "User with such email already exists");
                 resp.sendRedirect("/billing_project/jsp/userEditingForm.jsp");
             } else {
-                validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword);
+                validateEmailPassAndUpdateUser(req, resp, isAdmin, language, user, newPassword, currentPassword, newEmail);
             }
         }
     }
 
-    private void validateEmailPassAndUpdateUser(HttpServletRequest req, HttpServletResponse resp, boolean isAdmin, Language language, User user, String newPassword, String currentPassword) throws IOException {
+    private void validateEmailPassAndUpdateUser(HttpServletRequest req, HttpServletResponse resp, boolean isAdmin, Language language, User user, String newPassword, String currentPassword, String newEmail) throws IOException {
         if (newPassword.isEmpty()) {
-            if (ValidationUtil.isEmailValid(req.getParameter("email"))) {
+            if (ValidationUtil.isEmailValid(newEmail)) {
                 updateUser(req, user, currentPassword, isAdmin);
             } else {
                 req.getSession().setAttribute("Alert", EMAIL_IS_INVALID_MESSAGE);
             }
         } else {
-            if (ValidationUtil.isEmailValid(req.getParameter("email"))) {
-                if (ValidationUtil.isPasswordValid(req.getParameter("password"))) {
-                    updateUser(req, user, PasswordHashingUtil.getSaltedHash(currentPassword), isAdmin);
+            if (ValidationUtil.isEmailValid(newEmail)) {
+                if (ValidationUtil.isPasswordValid(newPassword)) {
+                    updateUser(req, user, PasswordHashingUtil.getSaltedHash(newPassword), isAdmin);
                 } else {
                     req.getSession().setAttribute("Alert", PASSWORD_IS_INVALID_MESSAGE);
                 }

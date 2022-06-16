@@ -1,13 +1,7 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryLocActivityUserActivityCountDTO;
 import com.epam.billing.dto.DateStatusTypeUserRequestDTO;
-import com.epam.billing.entity.*;
-import com.epam.billing.service.ActivityCategoryService;
-import com.epam.billing.service.ActivityService;
-import com.epam.billing.service.LanguageService;
 import com.epam.billing.service.UserRequestService;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

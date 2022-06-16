@@ -34,7 +34,7 @@
 
             <label for="activityCategoryName"><fmt:message key="placeholder.activityCategoryName"/></label>
             <select class="form-control" name="activityCategoryName" id="activityCategoryName">
-                <c:forEach var="activityCategoryForRequest" items="${sessionScope.listOfAllActivityCategories}">
+                <c:forEach var="activityCategoryForRequest" items="${sessionScope.listOfOpenedActivityCategories}">
                     <option>${activityCategoryForRequest.categoryName}</option>
                 </c:forEach>
             </select>

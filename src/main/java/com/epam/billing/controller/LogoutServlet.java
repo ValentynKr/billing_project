@@ -1,7 +1,5 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.entity.User;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +11,8 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
-        User user = (User)session.getAttribute("user"); // it`s for logger
         session.invalidate();
         resp.sendRedirect("/billing_project/login.jsp");
     }

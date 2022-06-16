@@ -7,8 +7,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebFilter("/login.jsp")
-public class LoginFilter implements Filter {
+public class LanguageSetterFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 

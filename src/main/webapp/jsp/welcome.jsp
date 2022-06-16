@@ -51,38 +51,49 @@
 
 </div>
 <hr>
-<div class="container">
-    <div class="col-md-10">
-        <table class="table">
-            <thead>
-            <tr>
-                <th><fmt:message key="userActivity.activityCategoryName"/></th>
-                <th><fmt:message key="userActivity.activityName"/></th>
-                <th><fmt:message key="userActivity.durationOfActivity"/></th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="userActivity" items="${sessionScope.userActivities}">
-                <tr>
-                    <td>${userActivity.activityCategoryName}</td>
-                    <td>${userActivity.activityName}</td>
-                    <td>${userActivity.activityDuration}</td>
-                    <td>
-                        <form class="form-group" action="${pageContext.request.contextPath}/addUserActivityDuration"
-                              method="post">
-                            <input type="text" class="form" name="userActivityNewDuration"
-                                   placeholder="<fmt:message key="userActivity.durationOfActivity"/>">
-                            <input type="hidden" name="userActivityName" value="${userActivity.activityName}">
-                            <button class="btn btn-xs btn-default" type="submit"><fmt:message
-                                    key="button.submit"/></button>
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
-</div>
+<c:choose>
+    <c:when test="${sessionScope.flagNothingToExpose}">
+        <div class="container">
+            <div class="btn-group pull-left">
+                <p class="text-danger"><fmt:message key="label.nothingToExpose"/></p>
+            </div>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="container">
+            <div class="col-md-10">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><fmt:message key="userActivity.activityCategoryName"/></th>
+                        <th><fmt:message key="userActivity.activityName"/></th>
+                        <th><fmt:message key="userActivity.durationOfActivity"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="userActivity" items="${sessionScope.userActivities}">
+                        <tr>
+                            <td>${userActivity.activityCategoryName}</td>
+                            <td>${userActivity.activityName}</td>
+                            <td>${userActivity.activityDuration}</td>
+                            <td>
+                                <form class="form-group" action="${pageContext.request.contextPath}/addUserActivityDuration"
+                                      method="post">
+                                    <input type="text" class="form" name="userActivityNewDuration"
+                                           placeholder="<fmt:message key="userActivity.durationOfActivity"/>">
+                                    <input type="hidden" name="userActivityName" value="${userActivity.activityName}">
+                                    <button class="btn btn-xs btn-default" type="submit"><fmt:message
+                                            key="button.submit"/></button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:otherwise>
+</c:choose>
 
 <c:if test="${not empty sessionScope.Alert}">
     <div class="row">

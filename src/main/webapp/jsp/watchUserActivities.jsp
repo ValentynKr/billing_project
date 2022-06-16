@@ -57,5 +57,10 @@
         <p class="h4"><fmt:message key="label.totalTimeSpent"/>: ${sessionScope.totalTimeSpent}</p>
     </div>
 </div>
+<div>
+    <a href="${pageContext.request.contextPath}/downloadReport" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true"><fmt:message
+            key="button.formAndDownloadReport"/></a>
+</div>
+
 </body>
 </html>

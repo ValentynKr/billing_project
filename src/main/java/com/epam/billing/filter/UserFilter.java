@@ -13,7 +13,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-@WebFilter({"/jsp/*", "/*"})
 public class UserFilter implements Filter {
 
     private final List<String> availableWithoutLogin = asList(

@@ -1,6 +1,5 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
 import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.*;
 import com.epam.billing.service.*;

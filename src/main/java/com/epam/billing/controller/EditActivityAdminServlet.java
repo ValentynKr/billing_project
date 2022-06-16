@@ -1,9 +1,7 @@
 package com.epam.billing.controller;
 
-import com.epam.billing.dto.ActivityCategoryIdLocalizedNameDTO;
 import com.epam.billing.dto.ActivityCategoryIdLocalizedNameStatusDTO;
 import com.epam.billing.entity.Activity;
-import com.epam.billing.entity.ActivityCategory;
 import com.epam.billing.service.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
