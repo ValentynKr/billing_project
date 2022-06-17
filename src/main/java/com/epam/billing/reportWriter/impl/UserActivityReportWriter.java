@@ -1,18 +1,22 @@
-package com.epam.billing.service;
+package com.epam.billing.reportWriter.impl;
 
 import com.epam.billing.dto.UserActivityUserNameIdDurationRecordingDTO;
 import com.epam.billing.entity.UserActivityReport;
+import com.epam.billing.reportWriter.ReportWriter;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPTable;
+
 import java.sql.Timestamp;
 
-public class ReportWriter {
+public class UserActivityReportWriter implements ReportWriter<UserActivityReport> {
+
     Document document;
 
-    public ReportWriter(Document document) {
+    public UserActivityReportWriter(Document document) {
         this.document = document;
     }
 
+    @Override
     public void writeReport(UserActivityReport userActivityReport) {
         Font regular = new Font(Font.FontFamily.HELVETICA, 12);
         Font bold = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
