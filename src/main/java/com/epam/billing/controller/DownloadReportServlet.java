@@ -42,9 +42,7 @@ public class DownloadReportServlet extends HttpServlet {
         List<UserActivityUserNameIdDurationRecordingDTO> listOfUserActivity = (List<UserActivityUserNameIdDurationRecordingDTO>) session.getAttribute("userActivities");
         float totalTimeSpent = (float) session.getAttribute("totalTimeSpent");
         resp.setContentType("application/pdf");
-        resp.setHeader(
-                "Content-disposition",
-                "inline; filename='Report.pdf'");
+        resp.setHeader("Content-disposition","inline; filename="+userName+"_activities_report.pdf");
         try {
             Document document = new Document();
             PdfWriter.getInstance(document, resp.getOutputStream());
